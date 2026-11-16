@@ -102,6 +102,27 @@ html.cc input, html.cc textarea{cursor:text !important}
 .fan-nav{display:flex; gap:8px}
 .fan-nav button{width:46px; height:46px; border-radius:var(--r-btn); border:1px solid var(--line); background:var(--surface); font:500 18px var(--f-body); color:var(--ink)}
 .fan-nav button:hover{border-color:var(--ink)}
+.fan-item video{width:100%; height:100%; object-fit:cover; object-position:top center; border-radius:12px; pointer-events:none; display:block; background:#fff}
+.fan-item.is-c video{object-fit:contain; object-position:center; border-radius:0; background:transparent}
+.fan-item.is-c .scr[style*=--sbg]{background:var(--sbg)}
+.fan-item.is-c{cursor:zoom-in}
+.fan-live{position:absolute; top:22px; left:22px; font:600 11px var(--f-body); letter-spacing:.04em; color:#fff; background:rgba(20,20,20,.72); padding:5px 10px; border-radius:999px; opacity:0; transition:opacity .3s; pointer-events:none; backdrop-filter:blur(6px)}
+.fan-live{display:none}
+.fan-item.is-c .fan-live{display:block; opacity:1}
+.fan-hint{font-size:13px; color:var(--ink-2); margin-top:6px}
+.lb{position:fixed; inset:0; z-index:1000; background:rgba(16,16,16,.88); backdrop-filter:blur(10px); display:flex; align-items:center; justify-content:center; padding:56px 84px}
+.lb[hidden]{display:none}
+.lb-fig{margin:0; max-width:min(1200px,100%); max-height:100%; display:flex; flex-direction:column; align-items:center; gap:14px}
+.lb-media{background:#fff; border-radius:18px; overflow:hidden; display:flex; max-height:calc(100vh - 190px)}
+.lb-media video,.lb-media img{display:block; max-width:100%; max-height:calc(100vh - 190px); width:auto; height:auto; object-fit:contain}
+.lb figcaption{color:#fff; text-align:center; display:flex; flex-wrap:wrap; gap:6px 10px; justify-content:center; align-items:center; max-width:70ch; font-size:15px}
+.lb figcaption strong{font-size:18px} .lb figcaption span:not(.chip){color:rgba(255,255,255,.75); flex-basis:100%} .lb figcaption em{color:rgba(255,255,255,.5); font-style:normal; font-size:13px}
+.lb figcaption .chip{background:rgba(255,255,255,.12); color:#fff; border-color:transparent}
+.lb button{position:absolute; width:48px; height:48px; border-radius:50%; border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.08); color:#fff; font:400 22px var(--f-body); cursor:pointer}
+.lb button:hover{background:rgba(255,255,255,.2)}
+.lb-x{top:18px; right:18px} .lb-p{left:18px; top:50%; translate:0 -50%} .lb-n{right:18px; top:50%; translate:0 -50%}
+html.lb-open{overflow:hidden}
+@media (max-width:640px){ .lb{padding:64px 12px 24px} .lb-p,.lb-n{top:auto; bottom:18px; translate:none} .lb-p{left:calc(50% - 60px)} .lb-n{right:calc(50% - 60px)} .lb-media,.lb-media video,.lb-media img{max-height:calc(100vh - 240px)} }
 .fan-dots{display:flex; gap:6px; justify-content:center; margin-top:14px}
 .fan-dots i{width:6px; height:6px; border-radius:50%; background:#D9D1C6; transition:width .3s, background .3s, border-radius .3s}
 .fan-dots i.on{width:22px; border-radius:6px; background:var(--ink)}
@@ -871,7 +892,7 @@ body.is-resume .resume-view{display:block}
   <section class="sec wrap" id="other">
     <div class="sec-head" style="flex-direction:row; justify-content:space-between; align-items:flex-end; flex-wrap:wrap">
       <div style="display:flex; flex-direction:column; gap:10px"><span class="eyebrow">AI experiments &amp; other works</span><h2>Other Works</h2></div>
-      <span class="rail-hint">Drag, swipe or use the arrows</span>
+      <span class="rail-hint">Drag or swipe · click the centre to expand</span>
     </div>
     <div class="fan" id="fan" data-drag tabindex="0" role="region" aria-roledescription="carousel" aria-label="Other works, use left and right arrow keys">
       <div class="fan-stage" id="fan-stage"></div>
@@ -1031,10 +1052,11 @@ const principles = [
   { t:"Details That Elevate", d:"Spacing, typography and interaction are refined until the product feels effortless to use.", k:"Visual design · UI systems · Interactions" }
 ];
 const others = [
-  { t:"LawCentral AI", c:"Agentic sales workspace for a legal-services team", tag:"AI · Dashboard", img:"lawcentral" },
-  { t:"Loop", c:"Declutter app: snap what you no longer need and give it a next life", tag:"Mobile · Concept", img:"oc-3" },
-  { t:"Voice ordering", c:"Talk-to-order flow with live transcription and quick edits", tag:"Mobile · AI", img:"oc-0" },
-  { t:"Apparel storefront", c:"Editorial e-commerce landing for an outerwear label", tag:"Web · Visual", img:"oc-1" },
+  { t:"LawCentral AI", c:"Agentic sales workspace: an AI agent reaches out to leads while the team watches every conversation live", tag:"AI · Dashboard", img:"ow-lawcentral", vid:"ow-lawcentral", bg:"#0C111D" },
+  { t:"Loop", c:"Declutter app: snap what you no longer need, choose its next life and see the impact add up", tag:"Mobile · Concept", img:"ow-loop", vid:"ow-loop", bg:"#141914" },
+  { t:"Supplier improvement plans", c:"Corrective actions with due dates, evidence and a shared supplier portal, built for GreenStitch", tag:"B2B SaaS · Sustainability", img:"ow-supplier-plans", vid:"ow-supplier-plans", bg:"#F4F4F4" },
+  { t:"Talko", c:"Speak in any language: Talko detects it, translates live and answers with a meme", tag:"Mobile · AI", img:"ow-talko", vid:"ow-talko", bg:"#FFFFFF" },
+  { t:"THREAD°", c:"A 360° shirt you can rotate to explore its materials, journey and impact", tag:"Web · Interactive", img:"ow-thread", vid:"ow-thread", bg:"#17202A" },
   { t:"Jacket configurator", c:"Pick a style and see its carbon impact before you buy", tag:"Web · Sustainability", img:"oc-2" }
 ];
 const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1117,9 +1139,14 @@ const fan = (()=>{
   const cap = document.getElementById('fan-cap'), dots = document.getElementById('fan-dots');
   const N = others.length, REP = 2, T = N*REP;
   stage.innerHTML = Array.from({length:T},(_,k)=>{ const o = others[k%N];
-    return `<div class="fan-item" data-k="${k}"><div class="scr"><img src="assets/${o.img}.webp" alt="${k<N? esc(o.t)+' screens' : ''}" draggable="false"></div><span class="shade"></span></div>`; }).join('');
+    const media = o.vid
+      ? `<video src="assets/${o.vid}.mp4" poster="assets/${o.img}.webp" muted loop playsinline preload="${k<N?'metadata':'none'}" aria-label="${k<N? esc(o.t)+' in motion' : ''}"></video>`
+      : `<img src="assets/${o.img}.webp" alt="${k<N? esc(o.t)+' screens' : ''}" draggable="false">`;
+    return `<div class="fan-item" data-k="${k}"><div class="scr"${o.bg?` style="--sbg:${o.bg}"`:''}>${media}</div><span class="shade"></span></div>`; }).join('');
   dots.innerHTML = others.map(()=>'<i></i>').join('');
   const items = [...stage.children];
+  let fanVisible = false;
+  new IntersectionObserver(([e])=>{ fanVisible = e.isIntersecting; render(); }, {threshold:.15}).observe(el);
   const st = { pos:0, open:1 };
   const wrap = d => { d = ((d % T) + T) % T; return d > T/2 ? d - T : d; };
   let W = 520, last = -1;
@@ -1133,7 +1160,8 @@ const fan = (()=>{
       const z = -near*330 - far*50;
       const vis = a > 6 ? 0 : 1;
       it.style.transform = `translate3d(${x}px,0,${z}px) rotateY(${ry}deg) scale(${1 - near*0.2 - far*0.03})`;
-      it.classList.toggle('is-c', a < .5);
+      const isC = a < .5; it.classList.toggle('is-c', isC);
+      const v = it.querySelector('video'); if (v){ if (isC && fanVisible){ if (v.paused){ v.preload='auto'; v.play().catch(()=>{}); } } else if (!v.paused) v.pause(); }
       it.style.zIndex = String(200 - Math.round(a*20));
       it.style.opacity = vis;
       it.querySelector('.shade').style.opacity = Math.min(.35, near*0.12 + far*0.05);
@@ -1152,13 +1180,32 @@ const fan = (()=>{
   el.addEventListener('pointerdown', e=>{ down=true; moved=0; sx=lx=e.clientX; sp=st.pos; lt=performance.now(); vx=0; el.setPointerCapture(e.pointerId); window.gsap && gsap.killTweensOf(st); document.dispatchEvent(new CustomEvent('fan-drag',{detail:true})); });
   el.addEventListener('pointermove', e=>{ if(!down) return; const now=performance.now(), dx=e.clientX-lx; vx = dx/Math.max(1,now-lt); lx=e.clientX; lt=now; moved+=Math.abs(dx); st.pos = sp - (e.clientX-sx)/(W*0.55); render(); });
   const up = e=>{ if(!down) return; down=false; document.dispatchEvent(new CustomEvent('fan-drag',{detail:false}));
-    if (moved < 6){ const it = e.target.closest && e.target.closest('.fan-item'); if (it){ const k=+it.dataset.k; go(st.pos + wrap(k - st.pos)); } return; }
+    if (moved < 6){ const it = document.elementsFromPoint(e.clientX, e.clientY).map(n=>n.closest && n.closest('.fan-item')).find(Boolean); if (it){ const k=+it.dataset.k; if (Math.abs(wrap(k - st.pos)) < .5) openLB(k % N); else go(st.pos + wrap(k - st.pos)); } return; }
     go(Math.round(st.pos - vx*0.9)); };
   el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
   el.addEventListener('keydown', e=>{ if(e.key==='ArrowRight'){ e.preventDefault(); go(Math.round(st.pos)+1,.7);} if(e.key==='ArrowLeft'){ e.preventDefault(); go(Math.round(st.pos)-1,.7);} });
   document.getElementById('fan-next').addEventListener('click', ()=>go(Math.round(st.pos)+1,.7));
   document.getElementById('fan-prev').addEventListener('click', ()=>go(Math.round(st.pos)-1,.7));
   addEventListener('resize', ()=>{ measure(); render(); });
+  el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); openLB(((Math.round(st.pos)%N)+N)%N); } });
+  /* full-screen viewer */
+  const lb = document.createElement('div'); lb.className='lb'; lb.setAttribute('role','dialog'); lb.setAttribute('aria-modal','true'); lb.setAttribute('aria-label','Work viewer'); lb.hidden = true;
+  lb.innerHTML = `<button class="lb-x" type="button" aria-label="Close">×</button><button class="lb-p" type="button" aria-label="Previous work">←</button><figure class="lb-fig"><div class="lb-media"></div><figcaption></figcaption></figure><button class="lb-n" type="button" aria-label="Next work">→</button>`;
+  document.body.appendChild(lb);
+  let lbI = 0, lastFocus = null;
+  function showLB(i){ lbI = ((i%N)+N)%N; const o = others[lbI];
+    lb.querySelector('.lb-media').style.background = o.bg || '#fff';
+    lb.querySelector('.lb-media').innerHTML = o.vid ? `<video src="assets/${o.vid}.mp4" poster="assets/${o.img}.webp" autoplay muted loop playsinline controls></video>` : `<img src="assets/${o.img}.webp" alt="${esc(o.t)}">`;
+    lb.querySelector('figcaption').innerHTML = `<strong>${esc(o.t)}</strong> <span class="chip">${esc(o.tag)}</span><span>${esc(o.c)}</span><em>${lbI+1} / ${N}</em>`; }
+  function openLB(i){ lastFocus = document.activeElement; showLB(i); lb.hidden = false; document.documentElement.classList.add('lb-open'); window.lenis && window.lenis.stop(); items.forEach(it=>{ const v=it.querySelector('video'); v && v.pause(); }); lb.querySelector('.lb-x').focus(); }
+  function closeLB(){ lb.hidden = true; lb.querySelector('.lb-media').innerHTML=''; document.documentElement.classList.remove('lb-open'); window.lenis && window.lenis.start(); go(Math.round(st.pos) + wrap(lbI - Math.round(st.pos)), .01); lastFocus && lastFocus.focus && lastFocus.focus(); render(); }
+  lb.querySelector('.lb-x').addEventListener('click', closeLB);
+  lb.querySelector('.lb-n').addEventListener('click', ()=>showLB(lbI+1));
+  lb.querySelector('.lb-p').addEventListener('click', ()=>showLB(lbI-1));
+  lb.addEventListener('click', e=>{ if (e.target === lb) closeLB(); });
+  addEventListener('keydown', e=>{ if (lb.hidden) return; if (e.key==='Escape') closeLB(); if (e.key==='ArrowRight') showLB(lbI+1); if (e.key==='ArrowLeft') showLB(lbI-1); });
+  let tsx = 0; lb.addEventListener('touchstart', e=>{ tsx = e.touches[0].clientX; }, {passive:true});
+  lb.addEventListener('touchend', e=>{ const dx = e.changedTouches[0].clientX - tsx; if (Math.abs(dx) > 50) showLB(lbI + (dx < 0 ? 1 : -1)); });
   measure(); render();
   return { st, render, go };
 })();
