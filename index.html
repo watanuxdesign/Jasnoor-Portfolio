@@ -914,7 +914,7 @@ body.is-resume .resume-view{display:block}
     <a class="back" href="#top">← Back to portfolio</a>
     <div class="rv-actions">
       <a class="btn btn-text" href="https://www.linkedin.com/in/noorjas2000/" target="_blank" rel="noopener"><span>LinkedIn</span> <span aria-hidden="true">↗</span></a>
-      <button class="btn btn-primary" type="button" id="rv-print">Download PDF <span aria-hidden="true">↓</span></button>
+      <a class="btn btn-primary" id="rv-print" href="assets/Jasnoor_Saini_Product_Designer_Resume.pdf" download="Jasnoor_Saini_Product_Designer_Resume.pdf">Download PDF <span aria-hidden="true">↓</span></a>
     </div>
   </div>
   <p class="rv-note" id="rv-note" role="status"></p>
@@ -1602,11 +1602,6 @@ function route(){
     window.onHome && window.onHome();
   }
 }
-document.getElementById('rv-print').addEventListener('click', ()=>{
-  const note = document.getElementById('rv-note');
-  try { window.print(); note.textContent = 'In the print window, choose "Save as PDF".'; }
-  catch(e){ note.textContent = 'Printing is blocked here. Open the page in its own tab, or use your browser menu → Print → Save as PDF.'; }
-});
 window.addEventListener('hashchange', route);
 route();
 </script>
