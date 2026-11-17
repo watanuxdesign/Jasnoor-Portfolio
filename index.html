@@ -5,9 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jasnoor Saini Portfolio</title>
 <meta name="description" content="Jasnoor Saini — product designer working on enterprise SaaS, data-heavy products and AI-assisted workflows.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Instrument+Serif:ital@1&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/dm-sans-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/caveat-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/stamp.webp" as="image">
+<style>
+@font-face{font-family:"DM Sans";font-style:normal;font-weight:100 1000;font-display:swap;src:url(assets/fonts/dm-sans-latin-opsz-normal.woff2) format("woff2")}
+@font-face{font-family:"DM Sans";font-style:italic;font-weight:100 1000;font-display:swap;src:url(assets/fonts/dm-sans-latin-opsz-italic.woff2) format("woff2")}
+@font-face{font-family:"Instrument Serif";font-style:italic;font-weight:400;font-display:swap;src:url(assets/fonts/instrument-serif-latin-400-italic.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-style:normal;font-weight:500;font-display:swap;src:url(assets/fonts/caveat-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-style:normal;font-weight:600;font-display:swap;src:url(assets/fonts/caveat-latin-600-normal.woff2) format("woff2")}
+</style>
 <style>
 html,body{overflow-x:clip}
 
@@ -26,8 +33,10 @@ html,body{overflow-x:clip}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important; animation:none!important}}
 body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+body::before{content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; transform:translateZ(0);
   background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg,var(--grid) 1px, transparent 1px);
-  background-size:40px 40px; background-attachment:fixed}
+  background-size:40px 40px}
 a{color:inherit}
 img{max-width:100%; display:block}
 h1,h2,h3{margin:0; font-weight:600; letter-spacing:-0.02em; text-wrap:balance}
@@ -122,6 +131,7 @@ html.cc input, html.cc textarea{cursor:text !important}
 .lb button:hover{background:rgba(255,255,255,.2)}
 .lb-x{top:18px; right:18px} .lb-p{left:18px; top:50%; translate:0 -50%} .lb-n{right:18px; top:50%; translate:0 -50%}
 html.lb-open{overflow:hidden}
+@media (max-width:600px){ .fan{height:clamp(280px,72vw,360px)} }
 @media (max-width:640px){ .lb{padding:64px 12px 24px} .lb-p,.lb-n{top:auto; bottom:18px; translate:none} .lb-p{left:calc(50% - 60px)} .lb-n{right:calc(50% - 60px)} .lb-media,.lb-media video,.lb-media img{max-height:calc(100vh - 240px)} }
 .fan-dots{display:flex; gap:6px; justify-content:center; margin-top:14px}
 .fan-dots i{width:6px; height:6px; border-radius:50%; background:#D9D1C6; transition:width .3s, background .3s, border-radius .3s}
@@ -370,6 +380,12 @@ body.is-resume .resume-view{display:block}
   a{color:inherit}
 }
 
+@media (max-width: 860px){
+  .sec.wrap, .hero.wrap, .manifesto.wrap{padding-left:var(--gutter); padding-right:var(--gutter)}
+  .glow{filter:none}
+  .nav{backdrop-filter:none; -webkit-backdrop-filter:none; background:rgba(255,255,255,.96)}
+  .card, .fan-item, .dev, .dev .scr img, .w{will-change:auto}
+}
 @media (max-width: 1080px){ .float{display:none} .hero{padding-top:80px} .logos{margin-top:72px} }
 @media (max-width: 860px){
   .card{grid-template-columns:1fr; gap:24px} .card .media{order:-1; min-height:220px}
@@ -882,9 +898,9 @@ body.is-resume .resume-view{display:block}
   <section class="sec wrap" id="experience">
     <div class="sec-head"><span class="eyebrow">About</span><h2>Industry Experience</h2></div>
     <div class="xp">
-      <div class="row"><div class="tile"><img src="assets/logo-greenstitch.webp" alt="GreenStitch" width="124" height="65"></div><div><h3>Founding Product Designer</h3><div class="co">GreenStitch <i></i> <span class="chip green">Sustainability Tech</span> <span class="chip">B2B SaaS</span></div><p>Sole designer. Designed the Digital Product Passport, supplier scorecards and ESG analytics for global brands, plus AI-assisted BRSR/GHG reporting.</p></div><div class="when">Mar 2025 – Apr 2026</div></div>
-      <div class="row"><div class="tile"><img src="assets/logo-qbs.webp" alt="QBS Learning" width="124" height="65"></div><div><h3>Product Designer</h3><div class="co">QBS Learning <i></i> <span class="chip blue">EdTech</span></div><p>Redesigned a high-scale content management system and learning workflows; unified UI patterns across modules and mentored design interns.</p></div><div class="when">Aug 2023 – Feb 2025</div></div>
-      <div class="row"><div class="tile"><img src="assets/logo-aakash.webp" alt="Aakash + BYJU'S" width="124" height="65"></div><div><h3>UI/UX Designer</h3><div class="co">Aakash + BYJU'S <i></i> <span class="chip blue">EdTech</span> <span class="chip">B2C</span></div><p>Improved the course purchase journey (+48% purchase ratio) and the Aakash Classroom web experience (+45% engagement) across web and mobile.</p></div><div class="when">Jul 2022 – Aug 2023</div></div>
+      <div class="row"><div class="tile"><img loading="lazy" decoding="async" src="assets/logo-greenstitch.webp" alt="GreenStitch" width="124" height="65"></div><div><h3>Founding Product Designer</h3><div class="co">GreenStitch <i></i> <span class="chip green">Sustainability Tech</span> <span class="chip">B2B SaaS</span></div><p>Sole designer. Designed the Digital Product Passport, supplier scorecards and ESG analytics for global brands, plus AI-assisted BRSR/GHG reporting.</p></div><div class="when">Mar 2025 – Apr 2026</div></div>
+      <div class="row"><div class="tile"><img loading="lazy" decoding="async" src="assets/logo-qbs.webp" alt="QBS Learning" width="124" height="65"></div><div><h3>Product Designer</h3><div class="co">QBS Learning <i></i> <span class="chip blue">EdTech</span></div><p>Redesigned a high-scale content management system and learning workflows; unified UI patterns across modules and mentored design interns.</p></div><div class="when">Aug 2023 – Feb 2025</div></div>
+      <div class="row"><div class="tile"><img loading="lazy" decoding="async" src="assets/logo-aakash.webp" alt="Aakash + BYJU'S" width="124" height="65"></div><div><h3>UI/UX Designer</h3><div class="co">Aakash + BYJU'S <i></i> <span class="chip blue">EdTech</span> <span class="chip">B2C</span></div><p>Improved the course purchase journey (+48% purchase ratio) and the Aakash Classroom web experience (+45% engagement) across web and mobile.</p></div><div class="when">Jul 2022 – Aug 2023</div></div>
     </div>
   </section>
 
@@ -892,7 +908,7 @@ body.is-resume .resume-view{display:block}
   <section class="sec wrap" id="other">
     <div class="sec-head" style="flex-direction:row; justify-content:space-between; align-items:flex-end; flex-wrap:wrap">
       <div style="display:flex; flex-direction:column; gap:10px"><span class="eyebrow">AI experiments &amp; other works</span><h2>Other Works</h2></div>
-      <span class="rail-hint">Drag or swipe · click the centre to expand</span>
+      <span class="rail-hint">Drag or swipe · tap the centre to expand</span>
     </div>
     <div class="fan" id="fan" data-drag tabindex="0" role="region" aria-roledescription="carousel" aria-label="Other works, use left and right arrow keys">
       <div class="fan-stage" id="fan-stage"></div>
@@ -911,7 +927,7 @@ body.is-resume .resume-view{display:block}
     <div class="contact" id="contact-box">
       <span class="eyebrow">Contact</span>
       <h2>Have a role or project in mind? <span class="serif">Let's talk.</span></h2>
-      <img class="keys" src="assets/keyboard-crop.webp" alt="Hands typing on a keyboard with a highlighted contact me key" width="998" height="714">
+      <img class="keys" loading="lazy" decoding="async" src="assets/keyboard-crop.webp" alt="Hands typing on a keyboard with a highlighted contact me key" width="998" height="714">
       <div class="mailbox">
         <a href="mailto:jasnoorsaini50@gmail.com" id="email">jasnoorsaini50@gmail.com</a>
         <button type="button" id="copy">Copy email</button>
@@ -1019,8 +1035,20 @@ body.is-resume .resume-view{display:block}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="assets/smooth.js" defer></script>
-<script src="assets/story.js" defer></script>
+<script>
+(function(){
+  var fine = matchMedia('(hover:hover) and (pointer:fine)').matches,
+      reduce = matchMedia('(prefers-reduced-motion: reduce)').matches,
+      big = matchMedia('(min-width: 861px)').matches,
+      slow = (navigator.connection && (navigator.connection.saveData || /2g/.test(navigator.connection.effectiveType||''))) || (navigator.deviceMemory && navigator.deviceMemory < 4);
+  function add(src){ var s=document.createElement('script'); s.src=src; s.defer=true; document.body.appendChild(s); }
+  if (fine && !reduce) add('assets/smooth.js');
+  if (big && fine && !reduce && !slow){
+    var go=function(){ (window.requestIdleCallback||function(f){setTimeout(f,300)})(function(){ add('assets/story.js'); }, {timeout:2000}); };
+    if (document.readyState==='complete') go(); else addEventListener('load', go, {once:true});
+  }
+})();
+</script>
 <script>
 const CS = "https://essential-simplicity-836146.framer.app";
 const projects = [
@@ -1062,14 +1090,14 @@ const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','
 
 const devHTML = (layout, src, k) => {
   const kind = layout==='keypad3' ? 'keypad' : (layout==='fan3' || (layout==='webphone' && k===1)) ? 'phone' : 'web';
-  return `<div class="slot s${k} ${kind}"><div class="dev ${kind}"><div class="scr"><img src="assets/${src}.webp" alt="" loading="lazy" draggable="false"></div></div></div>`;
+  return `<div class="slot s${k} ${kind}"><div class="dev ${kind}"><div class="scr"><img loading="lazy" decoding="async" src="assets/${src}.webp" alt="" loading="lazy" draggable="false"></div></div></div>`;
 };
 const ORDER = ['aakash-pg-plus','jio-study','mfine','product-passport','supplier-scorecard'];
 projects.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
 const cardHTML = (p,i)=>`
   <a class="card pc" href="${p.url || '#'+p.id}"${p.url ? ' target="_blank" rel="noopener"' : ''} draggable="false" style="--tone:${p.tone}" aria-label="${esc(p.name)}: ${esc(p.title)}${p.url ? ' (opens in a new tab)' : ''}">
     <div class="info">
-      <div class="brand">${p.logo ? `<img src="assets/${p.logo}.webp" alt="${esc(p.company)}" width="124" height="65">` : `<b>${esc(p.name)}</b>`}${i===0 ? '<em class="best">Best work</em>' : ''}<div class="go"><i><b class="a1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></b><b class="a2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></b></i><span>Read case study</span></div></div>
+      <div class="brand">${p.logo ? `<img loading="lazy" decoding="async" src="assets/${p.logo}.webp" alt="${esc(p.company)}" width="124" height="65">` : `<b>${esc(p.name)}</b>`}${i===0 ? '<em class="best">Best work</em>' : ''}<div class="go"><i><b class="a1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></b><b class="a2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg></b></i><span>Read case study</span></div></div>
       <p class="kick">${p.logo ? esc(p.name)+' · ' : ''}${p.meta.map(esc).join(' · ')}</p>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.line)}</p>
@@ -1140,7 +1168,7 @@ const fan = (()=>{
   stage.innerHTML = Array.from({length:T},(_,k)=>{ const o = others[k%N];
     const media = o.vid
       ? `<video src="assets/${o.vid}.mp4" poster="assets/${o.img}.webp" muted loop playsinline preload="${k<N?'metadata':'none'}" aria-label="${k<N? esc(o.t)+' in motion' : ''}"></video>`
-      : `<img src="assets/${o.img}.webp" alt="${k<N? esc(o.t)+' screens' : ''}" draggable="false">`;
+      : `<img loading="lazy" decoding="async" src="assets/${o.img}.webp" alt="${k<N? esc(o.t)+' screens' : ''}" draggable="false">`;
     return `<div class="fan-item" data-k="${k}"><div class="scr"${o.bg?` style="--sbg:${o.bg}"`:''}>${media}</div><span class="shade"></span></div>`; }).join('');
   dots.innerHTML = others.map(()=>'<i></i>').join('');
   const items = [...stage.children];
@@ -1149,7 +1177,8 @@ const fan = (()=>{
   const st = { pos:0, open:1 };
   const wrap = d => { d = ((d % T) + T) % T; return d > T/2 ? d - T : d; };
   let W = 520, last = -1;
-  function measure(){ W = Math.min(720, Math.max(260, el.clientWidth*0.62)); el.style.setProperty('--fw', W+'px'); }
+  let lastCW = 0;
+  function measure(){ const cw = el.clientWidth; lastCW = cw; W = cw < 600 ? cw*0.86 : Math.min(720, Math.max(260, cw*0.62)); el.style.setProperty('--fw', W+'px'); }
   function render(){
     if (window.__story) window.__story.fan = st.pos;
     items.forEach((it,k)=>{
@@ -1185,7 +1214,7 @@ const fan = (()=>{
   el.addEventListener('keydown', e=>{ if(e.key==='ArrowRight'){ e.preventDefault(); go(Math.round(st.pos)+1,.7);} if(e.key==='ArrowLeft'){ e.preventDefault(); go(Math.round(st.pos)-1,.7);} });
   document.getElementById('fan-next').addEventListener('click', ()=>go(Math.round(st.pos)+1,.7));
   document.getElementById('fan-prev').addEventListener('click', ()=>go(Math.round(st.pos)-1,.7));
-  addEventListener('resize', ()=>{ measure(); render(); });
+  addEventListener('resize', ()=>{ if (el.clientWidth === lastCW) return; measure(); render(); });
   el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); openLB(((Math.round(st.pos)%N)+N)%N); } });
   /* full-screen viewer */
   const lb = document.createElement('div'); lb.className='lb'; lb.setAttribute('role','dialog'); lb.setAttribute('aria-modal','true'); lb.setAttribute('aria-label','Work viewer'); lb.hidden = true;
@@ -1657,7 +1686,7 @@ route();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.__reduce = reduce;
   const hasG = !!window.gsap, hasT = !!window.THREE;
-  if (hasG && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+  if (hasG && window.ScrollTrigger) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.config({ignoreMobileResize:true}); gsap.ticker.lagSmoothing(500, 33); }
   const mouse = {x:0, y:0, nx:0, ny:0};
   window.addEventListener('pointermove', e => { mouse.x=e.clientX; mouse.y=e.clientY; mouse.nx=(e.clientX/innerWidth)*2-1; mouse.ny=(e.clientY/innerHeight)*2-1; }, {passive:true});
 
