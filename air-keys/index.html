@@ -37,6 +37,16 @@ h1,h2,h3{font-family:Sora,Inter,sans-serif;margin:0}
   transition:opacity .7s ease, filter .6s ease, transform .6s ease}
 #bg3d.fade{opacity:0}
 body.adjusting #bg3d{filter:none;transform:none;cursor:grab}
+body.mirror #camBg{display:block!important;filter:brightness(.82) saturate(1.05)!important;transform:scaleX(-1)!important}
+body.mirror #bg3d,body.mirror #fallbackBg{display:none!important}
+body.mirror #vignette{background:linear-gradient(to bottom,rgba(4,5,10,.45),transparent 18%,transparent 70%,rgba(4,5,10,.35))}
+body.mirror #tray{top:var(--trayTop,52vh);bottom:auto;height:clamp(180px,36vh,340px);width:min(1280px,96vw);padding:8px;
+  background:rgba(10,12,24,.10);-webkit-backdrop-filter:none;backdrop-filter:none;border-color:rgba(255,255,255,.22);box-shadow:none}
+body.mirror .key.white{background:linear-gradient(to bottom,rgba(255,255,255,.16),rgba(255,255,255,.05));border-color:rgba(255,255,255,.45);box-shadow:none}
+body.mirror .key.black{background:linear-gradient(to bottom,rgba(10,10,22,.62),rgba(30,32,56,.5));border-color:rgba(255,255,255,.35)}
+body.mirror .key .lbl{font-size:18px;text-shadow:0 1px 8px #000,0 0 2px #000}
+body.mirror .key.hover{background:linear-gradient(to bottom,color-mix(in srgb,var(--kc) 30%,transparent),rgba(255,255,255,.06))}
+body.mirror #pip{display:none}
 #camBg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1) scale(1.06);
   filter:blur(16px) brightness(.42) saturate(1.1);display:none}
 #fallbackBg{position:fixed;inset:0;background:radial-gradient(70% 60% at 30% 20%,rgba(139,108,255,.16),transparent 70%),radial-gradient(60% 50% at 80% 25%,rgba(47,214,240,.10),transparent 70%),#07080f;display:none}
@@ -288,6 +298,8 @@ body.reduce .key{transition-duration:.05s}
   <div class="section-t">Playing</div>
   <div class="row"><label>Play gesture</label><div class="seg" id="gestureSeg"><button data-g="pinch">Pinch</button><button data-g="tap">Air tap</button></div></div>
   <div class="row"><label for="sens">Gesture sensitivity</label><input type="range" id="sens" min="0.7" max="1.4" step="0.05"></div>
+  <div class="row"><label for="mirrorT">Full-screen camera (play on the video)</label><label class="switch"><input type="checkbox" id="mirrorT"><span></span></label></div>
+  <div class="row"><label for="trayTop">Keyboard height on screen</label><input type="range" id="trayTop" min="30" max="66" step="1"></div>
   <div class="row"><label for="glide">Slide between keys while pinched</label><label class="switch"><input type="checkbox" id="glide"><span></span></label></div>
   <div class="row"><label for="octaves">Keyboard size</label><select id="octaves"><option value="1">1 octave (big keys)</option><option value="2">2 octaves</option></select></div>
   <div class="row"><label for="scale">No wrong notes</label><select id="scale"><option value="off">Off (all keys)</option><option value="penta">Pentatonic (always sounds good)</option><option value="major">C major (white keys)</option></select></div>
@@ -327,7 +339,7 @@ const kcolor = m => `hsl(${hue(m)} 92% 66%)`;
 const prettyName = m => midiName(m).replace('#','♯');
 
 const DEFAULTS={instrument:'piano',preset:'pad',volume:.8,gesture:'pinch',sens:1,octaves:2,baseOct:4,scale:'off',
-  labels:'letters',theme:'off',glide:false,zone:{x0:.12,x1:.88,y0:.30,y1:.80},view:'player',blur:3,dim:.72,reduce:matchMedia('(prefers-reduced-motion: reduce)').matches,
+  labels:'letters',theme:'off',glide:false,mirror:true,trayTop:52,zone:{x0:.12,x1:.88,y0:.30,y1:.80},view:'player',blur:3,dim:.72,reduce:matchMedia('(prefers-reduced-motion: reduce)').matches,
   pip:true,noteCard:false,ambient:false,onboarded:false,customView:null,best:{}};
 let S={...DEFAULTS};
 try{ Object.assign(S, JSON.parse(localStorage.getItem('airkeys')||'{}')); }catch(e){}
@@ -572,7 +584,7 @@ const Tracker={lm:null,on:false,
 async function startCamera(){
   if(!navigator.mediaDevices?.getUserMedia) throw new Error('This browser cannot use the camera here. Open the page over https:// or http://localhost.');
   setStatus('warn','Starting camera…');
-  const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:640},height:{ideal:480},frameRate:{ideal:60},facingMode:'user'},audio:false});
+  const stream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1280},height:{ideal:720},frameRate:{ideal:60},facingMode:'user'},audio:false});
   video.srcObject=stream; await video.play();
   const cb=$('#camBg'); cb.srcObject=stream; cb.play().catch(()=>{});
   setStatus('warn','Loading hand tracking…');
@@ -601,6 +613,11 @@ class OneEuro{ constructor(minCut=1.4,beta=.012,dCut=1){this.minCut=minCut;this.
    - Hands are matched frame-to-frame by position, so a left/right label flip never re-triggers notes.
    - Height picks the row: lower part of the zone = white keys, raise your hand = black keys (with a dead gap). */
 const PRESS=.34, REL=.50, BLACK_SPLIT=.42;
+function camToScreen(p){ // p: normalized landmark; returns where it appears on the full-screen mirrored video
+  const vw=video.videoWidth||1280, vh=video.videoHeight||720, W=innerWidth, H=innerHeight;
+  const sc=Math.max(W/vw,H/vh), dw=vw*sc, dh=vh*sc, ox=(W-dw)/2, oy=(H-dh)/2;
+  return {x:ox+(1-p.x)*dw, y:oy+p.y*dh};
+}
 const Hands={map:new Map(),seq:0,plays:0,
   get(id){ let h=this.map.get(id); if(!h){ h={id,n:++this.seq,fx:new OneEuro(1.6,.015),fy:new OneEuro(1.6,.015),x:0,y:0,kx:.5,ky:.5,hover:null,down:false,key:null,prog:0,last:0,lastPress:0,pinch:null,tipPrevY:null,tipPrevT:0}; this.map.set(id,h);} return h; },
   release(h){ if(h.down&&h.key!=null) noteOff(h.key); h.down=false; h.key=null; },
@@ -625,9 +642,14 @@ const Hands={map:new Map(),seq:0,plays:0,
     const pressT=PRESS*S.sens, relT=REL*S.sens; h.pressT=pressT; h.relT=relT;
     const Z=S.zone, t=Keys.tray||{left:0,top:innerHeight*.66,width:innerWidth,height:innerHeight*.3,bottom:innerHeight};
     if(S.gesture==='pinch'){
-      const nx=clamp(((1-kx)-Z.x0)/(Z.x1-Z.x0),0,1), ny=clamp((ky-Z.y0)/(Z.y1-Z.y0),0,1); h.nx=nx; h.ny=ny;
-      const sx=t.left+4+nx*(t.width-8);
-      const sy= ny<BLACK_SPLIT ? t.top+4+(ny/BLACK_SPLIT)*t.height*.5 : t.top+t.height*.68+((ny-BLACK_SPLIT)/(1-BLACK_SPLIT))*t.height*.28;
+      let sx,sy;
+      if(S.mirror){ // play on the video: the cursor sits exactly between your thumb and index fingertips
+        const pt=camToScreen({x:(lm[4].x+lm[8].x)/2,y:(lm[4].y+lm[8].y)/2}); sx=pt.x; sy=pt.y;
+      } else {
+        const nx=clamp(((1-kx)-Z.x0)/(Z.x1-Z.x0),0,1), ny=clamp((ky-Z.y0)/(Z.y1-Z.y0),0,1); h.nx=nx; h.ny=ny;
+        sx=t.left+4+nx*(t.width-8);
+        sy= ny<BLACK_SPLIT ? t.top+4+(ny/BLACK_SPLIT)*t.height*.5 : t.top+t.height*.68+((ny-BLACK_SPLIT)/(1-BLACK_SPLIT))*t.height*.28;
+      }
       h.x=h.fx.f(sx,now); h.y=h.fy.f(sy,now);
       h.prog=clamp((1-h.pinch)/(1-pressT),0,1);
       if(!h.down){
@@ -640,8 +662,10 @@ const Hands={map:new Map(),seq:0,plays:0,
       } else if(h.pinch>relT){ this.release(h); }
       else if(S.glide && h.key!=null){ const k=Keys.hitSticky(h.x,h.y,h.key); if(k!=null&&k!==h.key){ noteOff(h.key); h.key=k; noteOn(k,.7,'user'); this.plays++; } h.lockX=h.x; h.lockY=h.y; }
     } else { // air tap: index fingertip dips into the keyboard
-      const tip=lm[8]; const nx=clamp(((1-tip.x)-Z.x0)/(Z.x1-Z.x0),0,1), ny=clamp((tip.y-Z.y0)/(Z.y1-Z.y0),0,1); h.nx=nx; h.ny=ny;
-      const top=t.top-180, sx=t.left+4+nx*(t.width-8), sy=top+ny*(t.bottom-top);
+      const tip=lm[8]; let sx,sy;
+      if(S.mirror){ const pt=camToScreen(tip); sx=pt.x; sy=pt.y; }
+      else { const nx=clamp(((1-tip.x)-Z.x0)/(Z.x1-Z.x0),0,1), ny=clamp((tip.y-Z.y0)/(Z.y1-Z.y0),0,1); h.nx=nx; h.ny=ny;
+        const top=t.top-180; sx=t.left+4+nx*(t.width-8); sy=top+ny*(t.bottom-top); }
       h.x=h.fx.f(sx,now); h.y=h.fy.f(sy,now);
       const line=t.top+10; const vy=h.tipPrevY==null?0:(h.y-h.tipPrevY)/Math.max(.001,(now-h.tipPrevT)/1000);
       h.hover = h.y>line-140 ? Keys.hit(h.x,Math.max(h.y,line+24)) : null;
@@ -773,6 +797,10 @@ const FX={c:$('#fx'),parts:[],rings:[],
     g.globalCompositeOperation='source-over';
     for(let i=(this.lbl||[]).length-1;i>=0;i--){ const l=this.lbl[i]; l.life-=dt*1.4; l.y-=dt*40; if(l.life<=0){ this.lbl.splice(i,1); continue; }
       g.font='700 22px Sora,Inter,sans-serif'; g.textAlign='center'; g.fillStyle=`hsla(${l.h},95%,72%,${l.life})`; g.fillText(l.t,l.x,l.y); }
+    // hand skeleton over the full-screen video
+    if(S.mirror) for(const h of Hands.map.values()){ if(!h.lm) continue; const P=h.lm.map(camToScreen);
+      g.strokeStyle='rgba(255,255,255,.55)'; g.lineWidth=2; g.beginPath(); for(const [a,b] of CONN){ g.moveTo(P[a].x,P[a].y); g.lineTo(P[b].x,P[b].y); } g.stroke();
+      for(const i of [4,8]){ g.fillStyle=i===8?'#2fd6f0':'#b39dff'; g.beginPath(); g.arc(P[i].x,P[i].y,6,0,7); g.fill(); } }
     // cursors
     for(const h of Hands.map.values()){
       const x=h.down&&S.gesture==='pinch'?h.lockX:h.x, y=h.down&&S.gesture==='pinch'?h.lockY:h.y;
@@ -1145,6 +1173,8 @@ function renderTop(){ $$('[data-inst]').forEach(b=>b.classList.toggle('active',b
 $$('#gestureSeg button').forEach(b=>b.onclick=()=>{ S.gesture=b.dataset.g; save(); Hands.resetAll(); renderSettings(); toast(S.gesture==='pinch'?'Pinch to play: aim, then touch thumb + index':'Air tap: dip your fingertip into the keys'); });
 $('#sens').oninput=e=>{ S.sens=+e.target.value; save(); };
 $('#glide').onchange=e=>{ S.glide=e.target.checked; save(); };
+$('#mirrorT').onchange=e=>{ S.mirror=e.target.checked; save(); Hands.resetAll(); applyPip(); applyBackground(); };
+$('#trayTop').oninput=e=>{ S.trayTop=+e.target.value; save(); applyBackground(); };
 $('#octaves').onchange=e=>{ S.octaves=+e.target.value; save(); if(!Keys.range) Keys.build(); };
 $('#scale').onchange=e=>{ S.scale=e.target.value; save(); panic(); Keys.build(); };
 $('#labels').onchange=e=>{ S.labels=e.target.value; save(); Keys.labels(); };
@@ -1152,7 +1182,7 @@ $('#reduce').onchange=e=>{ S.reduce=e.target.checked; save(); document.body.clas
 $('#pipT').onchange=e=>{ S.pip=e.target.checked; save(); applyPip(); };
 $('#noteT').onchange=e=>{ S.noteCard=e.target.checked; save(); applyPip(); };
 function renderSettings(){ $$('#gestureSeg button').forEach(b=>b.classList.toggle('active',b.dataset.g===S.gesture)); document.body.classList.toggle('tapmode',S.gesture==='tap');
-  $('#sens').value=S.sens; $('#glide').checked=!!S.glide; $('#octaves').value=S.octaves; $('#scale').value=S.scale; $('#labels').value=S.labels; $('#reduce').checked=S.reduce; $('#pipT').checked=S.pip; $('#noteT').checked=S.noteCard; document.body.classList.toggle('reduce',S.reduce); }
+  $('#sens').value=S.sens; $('#glide').checked=!!S.glide; $('#mirrorT').checked=!!S.mirror; $('#trayTop').value=S.trayTop||52; $('#octaves').value=S.octaves; $('#scale').value=S.scale; $('#labels').value=S.labels; $('#reduce').checked=S.reduce; $('#pipT').checked=S.pip; $('#noteT').checked=S.noteCard; document.body.classList.toggle('reduce',S.reduce); }
 function applyPip(){ const showPip=S.pip&&Tracker.on; $('#pip').classList.toggle('hidden',!showPip); $('#noteCard').classList.toggle('hidden',!S.noteCard); }
 
 // Scene panel
@@ -1172,6 +1202,10 @@ $('#ambient').onchange=async e=>{ S.ambient=e.target.checked; save(); await ensu
 $('#adjSave').onclick=()=>Scene.endAdjust(true); $('#adjCancel').onclick=()=>Scene.endAdjust(false);
 function applyLook(){ document.documentElement.style.setProperty('--bgblur',S.blur+'px'); document.documentElement.style.setProperty('--bgdim',S.dim); }
 function applyBackground(){
+  document.body.classList.toggle('mirror',!!(S.mirror&&Tracker.on));
+  document.documentElement.style.setProperty('--trayTop',(S.trayTop||52)+'vh');
+  $('#calibBtn').classList.toggle('hidden',!!(S.mirror&&Tracker.on));
+  requestAnimationFrame(()=>Keys.layout());
   const off=S.theme==='off'||!Scene.ready;
   $('#bg3d').style.display=off?'none':'block';
   $('#camBg').style.display='none';
@@ -1197,7 +1231,7 @@ function onboard(step=0,err=''){
   if(step===1) overlay(`<div class="card glass">${steps(1)}<h2>Turn on your camera</h2><p>Air Keys watches your hands to know which key you’re playing. <b>Your video stays on this device</b> — nothing is recorded or uploaded.</p>${err?`<p class="err">${err}</p>`:''}<div class="actions"><button class="btn primary" id="ob2">Turn on camera</button><button class="btn" id="obSkip">Use mouse & keyboard instead</button></div></div>`),
     $('#ob2').onclick=async()=>{ $('#ob2').textContent='Starting…'; try{ await startCamera(); onboard(2); }catch(e){ onboard(1,camError(e)); } },
     $('#obSkip').onclick=()=>{ finishOnboard(); toast('Click or tap the keys, or use A S D F… on your keyboard',4000); };
-  if(step===2) overlay(`<div class="card glass">${steps(2)}<h2>Show your hands</h2><p>Sit about an arm’s length from the camera with good light on your hands. Hold a hand up, palm facing the screen. <b>Move left/right</b> to choose a key, <b>raise your hand a little</b> for black keys. Tip: press <b>Calibrate area</b> later to set how far you need to reach.</p><p id="obHands" style="color:var(--text);font-weight:600">Looking for your hands…</p><div class="actions"><button class="btn primary" id="ob3" disabled style="opacity:.5">Next</button></div></div>`),
+  if(step===2) overlay(`<div class="card glass">${steps(2)}<h2>Show your hands</h2><p>You’ll see yourself on screen with the keyboard on top. Sit about an arm’s length away with good light on your hands, and hold a hand up so your fingers sit <b>over the keys on screen</b>. The dot between your thumb and index finger is your pointer — put it on a key and <b>pinch</b>. (Keys too high or low? Settings → Keyboard height.)</p><p id="obHands" style="color:var(--text);font-weight:600">Looking for your hands…</p><div class="actions"><button class="btn primary" id="ob3" disabled style="opacity:.5">Next</button></div></div>`),
     $('#ob3').onclick=()=>onboard(3);
   if(step===3){ const whites=Keys.list.filter(k=>!k.black); obTarget=whites[Math.floor(whites.length/2)]?.midi; Keys.mark(obTarget,'target');
     const g=S.gesture==='pinch';
