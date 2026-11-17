@@ -1167,7 +1167,7 @@ const fan = (()=>{
   const N = others.length, REP = 2, T = N*REP;
   stage.innerHTML = Array.from({length:T},(_,k)=>{ const o = others[k%N];
     const media = o.vid
-      ? `<video src="assets/${o.vid}.mp4" poster="assets/${o.img}.webp" muted loop playsinline preload="${k<N?'metadata':'none'}" aria-label="${k<N? esc(o.t)+' in motion' : ''}"></video>`
+      ? `<video src="assets/${o.vid}.mp4" poster="assets/${o.img}.webp" muted loop playsinline preload="none" aria-label="${k<N? esc(o.t)+' in motion' : ''}"></video>`
       : `<img loading="lazy" decoding="async" src="assets/${o.img}.webp" alt="${k<N? esc(o.t)+' screens' : ''}" draggable="false">`;
     return `<div class="fan-item" data-k="${k}"><div class="scr"${o.bg?` style="--sbg:${o.bg}"`:''}>${media}</div><span class="shade"></span></div>`; }).join('');
   dots.innerHTML = others.map(()=>'<i></i>').join('');
