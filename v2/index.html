@@ -29,7 +29,7 @@ button{font:inherit; color:inherit}
 /* ---------- HUD: the camera's viewfinder, always on top ---------- */
 .hud{position:fixed; inset:0; z-index:50; pointer-events:none; font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--hud,#111); transition:color .5s}
 .hud > *{position:absolute; pointer-events:auto}
-.hud .brand{top:18px; left:20px; display:flex; align-items:center; gap:10px; text-decoration:none; font-weight:500}
+.hud .brand{top:calc(18px + env(safe-area-inset-top)); left:calc(20px + env(safe-area-inset-left)); display:flex; align-items:center; gap:10px; text-decoration:none; font-weight:500}
 .hud .brand b{background:var(--hud,#111); color:var(--hudbg,#F2F2EE); padding:3px 7px 2px; font-weight:500; border-radius:2px; transition:background .5s,color .5s}
 .hud .brand i{display:inline-block; width:44px; height:12px; background:
   linear-gradient(90deg,currentColor 0 4px,transparent 4px 6px,currentColor 6px 8px,transparent 8px 12px,currentColor 12px 16px,transparent 16px 20px,currentColor 20px 22px,transparent 22px 26px,currentColor 26px 32px,transparent 32px 36px,currentColor 36px 38px,transparent 38px)}
@@ -37,19 +37,19 @@ button{font:inherit; color:inherit}
 .hud .chap a{display:block; padding:6px 9px; text-decoration:none; opacity:.45; border-radius:2px; transition:opacity .3s, background .3s}
 .hud .chap a.on{opacity:1; background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
 .hud .chap a:hover{opacity:1}
-.hud .tr{top:13px; right:20px; display:flex; align-items:center; gap:14px}
+.hud .tr{top:calc(13px + env(safe-area-inset-top)); right:calc(20px + env(safe-area-inset-right)); display:flex; align-items:center; gap:14px}
 .hud .v1{text-decoration:none}
 .hud .thm{display:flex; align-items:center; gap:7px; background:transparent; border:1px solid currentColor; border-radius:999px; padding:5px 11px 5px 8px; font:inherit; color:inherit; letter-spacing:.06em; text-transform:uppercase; cursor:pointer}
 .hud .thm:hover{background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
 .hud .thm i{width:11px; height:11px; border-radius:50%; border:1.5px solid currentColor; background:linear-gradient(90deg, currentColor 50%, transparent 50%)}
 .hud .v1 span{border-bottom:1px solid currentColor}
 .hud .tc{bottom:16px; right:20px; text-align:right; line-height:1.6}
-.hud .hint{bottom:16px; left:20px; line-height:1.6}
+.hud .hint{bottom:calc(16px + env(safe-area-inset-bottom)); left:20px; line-height:1.6}
 .hud .hint em{font-style:normal; display:inline-block; animation:nudge 1.6s ease-in-out infinite}
 @keyframes nudge{50%{transform:translateY(3px)}}
 .hud .rec{display:inline-block; width:7px; height:7px; border-radius:50%; background:#E5322D; margin-right:6px; animation:blink 1.2s steps(2) infinite}
 @keyframes blink{50%{opacity:.15}}
-.hud .snd{bottom:12px; left:50%; translate:-50% 0; display:flex; align-items:center; gap:9px; background:transparent; border:1px solid currentColor; border-radius:999px; padding:7px 13px 7px 11px; font:inherit; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; color:inherit}
+.hud .snd{bottom:calc(12px + env(safe-area-inset-bottom)); left:50%; translate:-50% 0; display:flex; align-items:center; gap:9px; background:transparent; border:1px solid currentColor; border-radius:999px; padding:7px 13px 7px 11px; font:inherit; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; color:inherit}
 .hud .snd:hover{background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
 .hud .snd .eq{display:inline-flex; align-items:flex-end; gap:2px; height:11px}
 .hud .snd .eq i{display:block; width:2px; height:3px; background:currentColor; border-radius:1px}
@@ -272,13 +272,17 @@ html[data-theme="dark"] .end .cred{color:#8a8a86}
   .hud .brand i{display:none}
   .hud .brand .sub{display:none}
   .hud .tr{gap:8px; right:12px} .hud .thm span{display:none} .hud .thm{padding:6px}
-  .hud .tc{display:none} .hud .snd{left:auto; right:14px; translate:none; padding:6px 10px}
+  .hud .tc{display:none; left:14px; right:auto; text-align:left; bottom:calc(16px + env(safe-area-inset-bottom))}
+  html.started .hud .tc{display:block}
+  .hud .tc br, .hud .tc .t{display:none} .hud .snd{left:auto; right:14px; translate:none; padding:6px 10px}
   .hud .v1{font-size:10px}
   .name{flex-direction:column; justify-content:space-between; align-items:flex-start; top:9svh; bottom:auto; height:72svh; translate:none; font-size:23vw; padding:0 4vw}
   .name .ln:last-child{align-self:flex-end}
   .obj{--ph:min(44svh, 100vw); top:46%}
-  .l1{display:none}
-  .l2{display:none}
+  .l1{display:block; left:4vw; top:25svh; font-size:7.6px; max-width:none}
+  .l1 ol li::before{width:2ch; margin-right:.4ch}
+  .l2{display:block; left:auto; right:4vw; top:57svh; font-size:7.6px; max-width:21ch}
+  .l2 p + p{margin-top:.45em}
   .role{left:4vw; bottom:5svh; max-width:22ch; font-size:12.5px}
   .slate{display:none}
   .s2-type{top:9svh} .s2-type h2{font-size:21vw}
@@ -290,17 +294,20 @@ html[data-theme="dark"] .end .cred{color:#8a8a86}
   .phone{width:38vw; border-radius:26px; padding:6px} .phone .scr{border-radius:21px}
   .pod.jio img{width:86vw}
   .mf-row{left:4vw; top:11svh; height:32svh; gap:3vw}
-  .shots{left:4vw; right:4vw; top:11svh; height:38svh; gap:3vw; justify-content:center}
+  .shots{left:0; right:0; top:13svh; height:42svh; gap:0; justify-content:center; align-items:center}
+  .shot{height:80%; opacity:.55} .shot:first-child{margin-right:-10vw} .shot:last-child{margin-left:-10vw}
+  .shot.hero{height:100%; margin-top:0; opacity:1; z-index:2; filter:drop-shadow(0 20px 30px rgba(0,0,0,.18))}
   .shot figcaption{display:none} .shot .fr{inset:-5px} .shot .fr::after{font-size:8.5px}
   .wide{left:4vw; width:92vw; top:13svh; padding:5vw 3vw}
   .side-note{left:4vw; right:4vw; top:auto; bottom:4svh; max-width:none}
-  .s3-h{right:4vw; bottom:auto; top:46svh; font-size:9vw}
+  .s3-h{right:4vw; bottom:auto; top:46svh; font-size:7.2vw}
   .mf-note{left:4vw; right:4vw; top:auto; bottom:4svh; max-width:none}
   .iso{left:50%; top:34%; width:80vw}
   .dpp-note{left:4vw; right:4vw; top:auto; bottom:4svh; max-width:none}
   .sup-wrap{left:4vw; top:10svh; width:92vw; max-height:52svh}
   .sup-note{left:4vw; right:4vw; bottom:4svh; max-width:none}
-  .note{font-size:11px}
+  .note{font-size:12px} .note p{line-height:1.55} .pills li{font-size:10.5px; padding:7px 9px}
+  .hud .snd, .hud .thm{min-height:38px} .hud .snd{padding:9px 13px} .hud .thm{padding:9px 11px}
   .hexes{display:none}
   .s4-title{font-size:15vw; top:8svh}
   .ncam{width:520vw}
@@ -310,7 +317,9 @@ html[data-theme="dark"] .end .cred{color:#8a8a86}
   .cap h3{font-size:30px}
   .xp{left:4vw; right:4vw; width:auto; top:auto; bottom:4svh; translate:none; font-size:13px}
   .xp li i{display:none}
-  .end .px{display:none}
+  .end{justify-content:flex-start; padding-top:26svh}
+  .end .px{display:block; right:5vw; top:9svh; width:36vw; rotate:4deg}
+  .end .row{gap:8px} .end .btn{padding:12px 14px}
   .end .cred{flex-direction:column; gap:4px}
   .lb{padding:60px 12px}
 }
@@ -564,7 +573,7 @@ const tiny = document.createElement('canvas'), tctx = tiny.getContext('2d');
 const OR='#FF6B1A', INK='#0d0d0d';
 const dark = () => root.dataset.theme === 'dark';
 let PW=0, PH=0, DPR=1, BOX=null;
-function sizePX(){ const r = pxc.getBoundingClientRect(); DPR = Math.min(devicePixelRatio||1, 2.25); PW = Math.round(r.width*DPR); PH = Math.round(r.height*DPR); if(!PW||!PH) return; pxc.width=PW; pxc.height=PH; art.width=PW; art.height=PH; paintArt(); drawPX(); }
+function sizePX(){ const r = pxc.getBoundingClientRect(); DPR = Math.min(devicePixelRatio||1, mob() ? 1.6 : 2.25); PW = Math.round(r.width*DPR); PH = Math.round(r.height*DPR); if(!PW||!PH) return; pxc.width=PW; pxc.height=PH; art.width=PW; art.height=PH; paintArt(); drawPX(); }
 function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
 function paintArt(){
   const c=actx, s=Math.min(PH/100, PW/66)*.8, cx=PW*.48, cy=PH*.64, Sz=19, T=2.6;
@@ -638,7 +647,7 @@ document.fonts && document.fonts.ready.then(()=>{ if (PW){ paintArt(); drawPX();
 /* ---------- dot matrix: the lens between worlds ---------- */
 const dc = $('#dots'), dctx = dc.getContext('2d');
 let DW=0, DH=0, DD=1;
-function sizeDots(){ DD=Math.min(devicePixelRatio||1,1.5); DW=Math.round(innerWidth*DD); DH=Math.round(dc.parentElement.clientHeight*DD); dc.width=DW; dc.height=DH; drawDots(); }
+function sizeDots(){ DD=Math.min(devicePixelRatio||1, mob() ? 1.25 : 1.5); DW=Math.round(innerWidth*DD); DH=Math.round(dc.parentElement.clientHeight*DD); dc.width=DW; dc.height=DH; drawDots(); }
 function drawDots(){
   const c=dctx; c.clearRect(0,0,DW,DH);
   if (P.dots<=0.001 || P.dotsA<=0.001) return;
@@ -752,7 +761,8 @@ function hud(t,L){
   root.style.setProperty('--hud', fg); root.style.setProperty('--hudbg', bgc); lastK = k;
   chapA.forEach((a,i)=>a.classList.toggle('on', i===k));
   const sec = t/L*140, f = Math.floor((sec%1)*24), p2=n=>String(Math.floor(n)).padStart(2,'0');
-  tc.innerHTML = SC[k][1]+'<br>00:'+p2(sec/60)+':'+p2(sec%60)+':'+p2(f);
+  tc.innerHTML = SC[k][1]+'<br><span class="t">00:'+p2(sec/60)+':'+p2(sec%60)+':'+p2(f)+'</span>';
+  root.classList.toggle('started', t > .12);
   bar.style.transform='scaleX('+(t/L)+')';
 }
 
@@ -889,7 +899,7 @@ nodes.forEach((n,i)=>{
 });
 const tp = t0 + nodes.length*.42;
 const fit = ()=> (mob()? innerWidth*.92 : innerWidth*.5) / $('#ncam').offsetWidth;
-tl.to('#ncam', {x:()=>mob()? vw(4) : vw(3), y:()=>mob()? -vh(18) : vh(18), scale:fit, duration:.55, ease:'power2.inOut'}, tp)
+tl.to('#ncam', {x:()=>mob()? vw(4) : vw(3), y:()=>mob()? vh(14) : vh(18), scale:fit, duration:.55, ease:'power2.inOut'}, tp)
   .to(nodes, {opacity:.85, duration:.3}, tp)
   .set('#b-xp', {autoAlpha:1}, tp)
   .to('#xp', {autoAlpha:1, x:0, duration:.35, ease:'power2.out'}, tp+.2)
@@ -899,7 +909,8 @@ tl.to('#ncam', {x:()=>mob()? vw(4) : vw(3), y:()=>mob()? -vh(18) : vh(18), scale
   .set({}, {}, L);
 
 window.__tl = tl;
-const st = ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom bottom', scrub: matchMedia('(pointer:fine)').matches ? 1 : .5, animation:tl, invalidateOnRefresh:true,
+if (ScrollTrigger.isTouch === 1) ScrollTrigger.normalizeScroll({allowNestedScroll:true});
+const st = ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom bottom', scrub: matchMedia('(pointer:fine)').matches ? 1 : .9, animation:tl, invalidateOnRefresh:true,
   onUpdate: self => hud(tl.time(), L) });
 
 /* chapter jumps glide to the exact moment on the timeline */
