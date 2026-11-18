@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Jasnoor Saini · Portfolio V2 · Cinematic</title>
+<title>Jasnoor Saini · Design Portfolio</title>
 <meta name="description" content="Jasnoor Saini, product designer for AI, complex systems and emerging tech. Version 2: a scroll-directed cinematic portfolio.">
 <meta name="theme-color" content="#F2F2EE">
 <link rel="preload" href="fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
@@ -70,7 +70,13 @@ button{font:inherit; color:inherit}
 .scene{position:absolute; inset:0; overflow:hidden; --gl:rgba(13,13,13,.055)}
 /* one light 40px grid through every world, like V1 */
 .scene::before, .end::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
-  background-image:linear-gradient(var(--gl) 1px, transparent 1px), linear-gradient(90deg, var(--gl) 1px, transparent 1px); background-size:40px 40px; background-position:-1px -1px}
+  background-image:linear-gradient(var(--gl) 1px, transparent 1px), linear-gradient(90deg, var(--gl) 1px, transparent 1px); background-size:28px 28px; background-position:-1px -1px}
+/* a single soft orange light drifting slowly across every world */
+.scene::after, .end::after{content:""; position:absolute; z-index:0; pointer-events:none; left:-30vmax; top:-20vmax; width:70vmax; height:70vmax; border-radius:50%;
+  background:radial-gradient(circle, rgba(255,107,26,var(--glo,.13)) 0%, rgba(255,107,26,0) 62%); animation:glow 34s ease-in-out infinite alternate; will-change:transform}
+#s4{--glo:.09}
+@keyframes glow{0%{transform:translate(0,10svh)} 50%{transform:translate(55vw,40svh)} 100%{transform:translate(110vw,8svh)}}
+.end > :not(.px):not(.cred){position:relative; z-index:1} .end .px, .end .cred{z-index:1}
 #s4{--gl:rgba(255,255,255,.06)}
 html[data-theme="dark"] .scene, html[data-theme="dark"] .end{--gl:rgba(255,255,255,.055)}
 .beat{position:absolute; inset:0}
