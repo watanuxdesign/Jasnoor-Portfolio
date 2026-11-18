@@ -67,7 +67,12 @@ button{font:inherit; color:inherit}
 /* ---------- the film: one sticky stage, scroll drives the camera ---------- */
 #film{position:relative; height:calc((var(--L) + 1) * 100svh)}
 .stage{position:sticky; top:0; height:100svh; overflow:hidden; isolation:isolate}
-.scene{position:absolute; inset:0; overflow:hidden}
+.scene{position:absolute; inset:0; overflow:hidden; --gl:rgba(13,13,13,.055)}
+/* one light 40px grid through every world, like V1 */
+.scene::before, .end::before{content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-image:linear-gradient(var(--gl) 1px, transparent 1px), linear-gradient(90deg, var(--gl) 1px, transparent 1px); background-size:40px 40px; background-position:-1px -1px}
+#s4{--gl:rgba(255,255,255,.06)}
+html[data-theme="dark"] .scene, html[data-theme="dark"] .end{--gl:rgba(255,255,255,.055)}
 .beat{position:absolute; inset:0}
 #dots{position:absolute; inset:0; z-index:20; pointer-events:none; width:100%; height:100%}
 
@@ -215,7 +220,7 @@ button{font:inherit; color:inherit}
 .xp li b{font-weight:500} .xp li span{color:#9a9a9a; font-family:var(--mono); font-size:11px; text-transform:uppercase; align-self:center}
 .xp li i{grid-column:1/-1; font-style:normal; color:#bdbdbd; font-size:13.5px; line-height:1.45}
 .xp .pr{margin-top:18px; font-family:var(--mono); font-size:10.5px; text-transform:uppercase; color:#cfcfcf; line-height:1.8}
-.end{position:absolute; inset:0; z-index:12; background:var(--paper); color:var(--ink); clip-path:polygon(var(--ex1,140%) 100%, 140% 100%, 140% 0, var(--ex2,160%) 0); display:flex; flex-direction:column; justify-content:center; padding:10svh 4vw 12svh}
+.end{--gl:rgba(13,13,13,.055); position:absolute; inset:0; z-index:12; background:var(--paper); color:var(--ink); clip-path:polygon(var(--ex1,140%) 100%, 140% 100%, 140% 0, var(--ex2,160%) 0); display:flex; flex-direction:column; justify-content:center; padding:10svh 4vw 12svh}
 .end .k{font-family:var(--mono); font-size:11px; text-transform:uppercase}
 .end h2{margin:.25em 0 .35em; font-weight:700; font-size:clamp(46px,8.6vw,150px); line-height:.86; letter-spacing:-.06em; max-width:12ch}
 .end h2 span{display:block}
