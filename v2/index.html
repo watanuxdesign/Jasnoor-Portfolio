@@ -72,8 +72,7 @@ button{font:inherit; color:inherit}
 #dots{position:absolute; inset:0; z-index:20; pointer-events:none; width:100%; height:100%}
 
 /* ===== SCENE 01 · SIGNAL (white, data dissolve) ===== */
-#s1{background:linear-gradient(rgba(13,13,13,.045) 1px, transparent 1px) 0 0/14px 14px, linear-gradient(90deg, rgba(13,13,13,.045) 1px, transparent 1px) 0 0/14px 14px, radial-gradient(120% 90% at 50% 40%, #FFFFFF 0%, #F4F4F0 60%, #ECECE7 100%); z-index:4}
-#ascii{position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none}
+#s1{background:radial-gradient(120% 90% at 50% 40%, #FFFFFF 0%, #F2F2EE 55%, #E7E7E2 100%); z-index:4}
 .s1-cam{position:absolute; inset:0; transform-origin:50% 50%; will-change:transform}
 .name{position:absolute; left:0; right:0; top:50%; translate:0 -54%; margin:0; display:flex; justify-content:space-between; padding:0 2.2vw; pointer-events:none;
   font-weight:800; font-size:clamp(64px, 15.2vw, 260px); line-height:.8; letter-spacing:-.065em; color:var(--ink)}
@@ -226,7 +225,7 @@ button{font:inherit; color:inherit}
 /* ---------- dark theme ---------- */
 html[data-theme="dark"]{--paper:#0B0B0C}
 html[data-theme="dark"] body{background:#0B0B0C; color:#EDEDE8}
-html[data-theme="dark"] #s1{background:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px) 0 0/14px 14px, linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/14px 14px, radial-gradient(120% 90% at 50% 40%, #1A1A1C 0%, #0E0E10 60%, #070708 100%)}
+html[data-theme="dark"] #s1{background:radial-gradient(120% 90% at 50% 40%, #1A1A1C 0%, #0E0E10 60%, #070708 100%)}
 html[data-theme="dark"] .name{color:#F2F2EE}
 html[data-theme="dark"] .role{color:#EDEDE8} html[data-theme="dark"] .role small, html[data-theme="dark"] .lbl ol li::before{color:#8a8a86}
 html[data-theme="dark"] .slate{color:#9a9a96}
@@ -344,7 +343,6 @@ html.static .ly.l1x{transform:translateZ(0)} html.static .ly.l2x{transform:trans
   <!-- SCENE 01 · SIGNAL -->
   <section class="scene" id="s1" aria-label="Opening">
    <div class="beat">
-    <canvas id="ascii" aria-hidden="true"></canvas>
     <div class="s1-cam" id="s1cam">
       <h1 class="name" aria-label="Jasnoor Saini"><span class="ln"><span id="n1">Jasnoor</span></span><span class="ln"><span id="n2">Saini</span></span></h1>
       <div class="obj" id="obj"><canvas id="px" role="img" aria-label="A layered product system: data, a chart, a supplier list and a score, dissolving into pixels"></canvas></div>
@@ -552,6 +550,7 @@ const pxc = $('#px'), pctx = pxc.getContext('2d');
 const art = document.createElement('canvas'), actx = art.getContext('2d');
 const tiny = document.createElement('canvas'), tctx = tiny.getContext('2d');
 const OR='#FF6B1A', INK='#0d0d0d';
+const dark = () => root.dataset.theme === 'dark';
 let PW=0, PH=0, DPR=1, BOX=null;
 function sizePX(){ const r = pxc.getBoundingClientRect(); DPR = Math.min(devicePixelRatio||1, 2.25); PW = Math.round(r.width*DPR); PH = Math.round(r.height*DPR); if(!PW||!PH) return; pxc.width=PW; pxc.height=PH; art.width=PW; art.height=PH; paintArt(); drawPX(); }
 function rr(c,x,y,w,h,r){ c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
@@ -598,73 +597,27 @@ function paintArt(){
   const tl0=iso(-Sz,-Sz,zs[3]+T), r0=iso(Sz,-Sz,zs[3]+T), b0=iso(Sz,Sz,0), l0=iso(-Sz,Sz,0);
   BOX={x0:l0[0], x1:r0[0], y0:tl0[1], y1:b0[1]};
 }
-/* ---------- ASCII pixel field: tinted grid cells carrying characters ---------- */
-const RAMP = ' .:;tS%#@8';
-const PAL_L = { o:[[255,232,216],[255,107,26],[150,52,0]], k:[[226,226,220],[60,60,58],[13,13,13]], s:[[220,229,214],[126,160,104],[46,74,38]] };
-const PAL_D = { o:[[58,28,14],[255,107,26],[255,214,190]], k:[[34,34,34],[150,150,146],[240,240,236]], s:[[26,38,24],[126,170,100],[214,236,200]] };
-const dark = () => root.dataset.theme === 'dark';
-let PAL = dark() ? PAL_D : PAL_L;
-const mix=(a,b,t)=>'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')';
-function glyphCell(c, x, y, size, v, pal, fontPx){ // v 0..1
-  const P0=PAL[pal]; const t=Math.min(1,v);
-  c.fillStyle = mix(P0[0], P0[1], t*.85); c.fillRect(x+.5, y+.5, size-1, size-1);
-  const ch = RAMP[Math.min(RAMP.length-1, Math.max(1, Math.round(t*(RAMP.length-1))))];
-  c.fillStyle = dark() ? (t>.55 ? '#0B0B0C' : mix(P0[1], P0[2], .55)) : (t>.55 ? (pal==='k' ? '#F2F2EE' : mix(P0[2],[255,255,255],.1)) : mix(P0[1], P0[2], .6));
-  c.fillText(ch, x+size/2, y+size/2+fontPx*.36);
-}
-const asc = $('#ascii'), sctx = asc.getContext('2d');
-let AW=0, AH=0, AD=1, CS=14, aRun=true, aRaf=0, aLast=0, mouse={x:-9999,y:-9999};
-const STREAMS = [
-  {pal:'o', x:.18, y:.92, ang:-.9,  len:.30, w:.034, sp:.018, ph:0},
-  {pal:'k', x:.05, y:.40, ang:-.62, len:.24, w:.026, sp:.014, ph:1.7},
-  {pal:'s', x:.62, y:.08, ang:.72,  len:.28, w:.03,  sp:.012, ph:3.1},
-  {pal:'o', x:.90, y:.55, ang:2.4,  len:.22, w:.028, sp:.016, ph:4.2},
-  {pal:'k', x:.78, y:.98, ang:-2.2, len:.26, w:.03,  sp:.013, ph:5.6},
-  {pal:'s', x:.30, y:.18, ang:.35,  len:.20, w:.024, sp:.017, ph:2.4}
-];
-function sizeAscii(){ AD=Math.min(devicePixelRatio||1,2); const r=asc.getBoundingClientRect(); AW=Math.round(r.width*AD); AH=Math.round(r.height*AD); asc.width=AW; asc.height=AH; CS = mob()?12:14; }
-function drawAscii(time){
-  if (!AW) return; const c=sctx, cs=CS*AD, cols=Math.ceil(AW/cs), rows=Math.ceil(AH/cs), D=Math.hypot(AW,AH), t=time/1000;
-  c.clearRect(0,0,AW,AH); const fp=Math.round(cs*.62); c.font='500 '+fp+'px JB Mono, ui-monospace, monospace'; c.textAlign='center';
-  // stream heads travel and wrap; bodies trail behind and sway
-  const S = STREAMS.map(s=>{ const dx=Math.cos(s.ang), dy=Math.sin(s.ang); const k=((t*s.sp + s.ph*.17) % 1.6) - .3;
-    return {pal:s.pal, hx:(s.x + dx*k*1.1)*AW, hy:(s.y + dy*k*1.1)*AH, dx, dy, L:s.len*D, W:s.w*D, ph:s.ph}; });
-  const reveal = Math.min(1, P.asm*1.1), mx=mouse.x*AD, my=mouse.y*AD, mr=110*AD;
-  for (let j=0;j<rows;j++){ const cy=(j+.5)*cs; for (let i=0;i<cols;i++){ const cx=(i+.5)*cs;
-    let best=0, pal='k';
-    for (let q=0;q<S.length;q++){ const s=S[q]; const px=cx-s.hx, py=cy-s.hy; const along=-(px*s.dx+py*s.dy); if (along<0||along>s.L) continue;
-      const a=along/s.L; const sway=Math.sin(a*5.2+t*1.3+s.ph)*s.W*1.1; const perp=(px*-s.dy+py*s.dx)-sway;
-      const width=s.W*(1-a*.75); const v=Math.exp(-(perp*perp)/(width*width))*(1-a*.55);
-      if (v>best){ best=v; pal=s.pal; } }
-    if (mx>-999){ const d=Math.hypot(cx-mx, cy-my); if (d<mr){ const v=(1-d/mr)*.85; if (v>best){ best=v; pal='o'; } } }
-    best *= .55 + noise(i*.35+t*.6, j*.35)*.75; best *= reveal;
-    if (best > .22) glyphCell(c, i*cs, j*cs, cs, (best-.22)/.78, pal, fp);
-  } }
-}
-function asciiLoop(now){ aRaf=requestAnimationFrame(asciiLoop); if (!aRun || document.hidden) return; if (now-aLast < 33) return; aLast=now; drawAscii(now); }
-addEventListener('pointermove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; }, {passive:true});
-addEventListener('pointerleave', ()=>{ mouse.x=mouse.y=-9999; });
 function drawPX(){
   if (!PW || !BOX) return;
   const c=pctx; c.clearRect(0,0,PW,PH);
   if (P.pix < .02){ c.imageSmoothingEnabled=true; c.drawImage(art,0,0); }
   else { const b = 2 + P.pix*P.pix*46*DPR, tw=Math.max(2,Math.round(PW/b)), th=Math.max(2,Math.round(PH/b));
     tiny.width=tw; tiny.height=th; tctx.imageSmoothingEnabled=true; tctx.drawImage(art,0,0,tw,th); c.imageSmoothingEnabled=false; c.drawImage(tiny,0,0,tw,th,0,0,PW,PH); }
-  const {x0,x1,y0,y1}=BOX, pw=x1-x0, cell=Math.round((14+P.pix*30)*DPR), fp=Math.round(cell*.62);
-  c.font='500 '+fp+'px JB Mono, ui-monospace, monospace'; c.textAlign='center';
-  const _u=0, cols=Math.ceil(PW/cell), rows=Math.ceil(PH/cell), asm=P.asm;
+  const {x0,x1,y0,y1}=BOX, pw=x1-x0, cell=Math.max(3, Math.round((5+P.pix*P.pix*34)*DPR)), ink = dark() ? '#EDEDE8' : INK;
+  const sq=(x,y,col,hollow)=>{ c.fillStyle=col; c.fillRect(x,y,cell-1,cell-1); if (hollow && cell>5) c.clearRect(x+cell*.3,y+cell*.3,cell*.36,cell*.36); };
+  const cols=Math.ceil(PW/cell), rows=Math.ceil(PH/cell), asm=P.asm;
   for (let j=0;j<rows;j++) for (let i=0;i<cols;i++){
     const x=i*cell, y=j*cell, cx=x+cell/2, cy=y+cell/2, h=hash(i,j), n=noise(i*.18,j*.18);
     const inside = cx>x0 && cx<x1 && cy>y0 && cy<y1;
     if (inside){
       if (h > asm*1.15 - .1 + n*.1){ c.clearRect(x,y,cell,cell); continue; }
       const er=(cx-(x0+pw*.55))/(pw*.45);
-      if (er>0 && h < er*er*(.55 + P.pix*.4)*(n*.9+.3)){ c.clearRect(x,y,cell,cell); if (h<.24) glyphCell(c,x,y,cell, .35+hash(i+5,j)*.65, h<.12?'k':'o', fp); }
+      if (er>0 && h < er*er*(.55 + P.pix*.4)*(n*.9+.3)){ c.clearRect(x,y,cell,cell); if (h<.2) sq(x,y, h<.11 ? ink : OR, hash(i+5,j)<.3); }
     } else {
       const dx = cx<x0 ? x0-cx : (cx>x1 ? cx-x1 : 0), dy = cy<y0 ? y0-cy : (cy>y1 ? cy-y1 : 0);
-      const d = Math.hypot(dx*(cx>x1?.75:1.6), dy*1.6)/pw, reach=.3;
+      const d = Math.hypot(dx*(cx>x1?.75:1.6), dy*1.6)/pw, reach=.22;
       if (d < reach){ const p = Math.pow(1-d/reach,2.2)*(cx>x0+pw*.5 ? .8 : .3)*(n>.42?1:.25)*asm;
-        if (h < p) glyphCell(c,x,y,cell, .25+hash(i+1,j+9)*.75, hash(i+7,j+3) < .55 ? 'k' : 'o', fp); }
+        if (h < p) sq(x,y, hash(i+7,j+3) < .62 ? ink : OR, hash(i+1,j+9)<.22); }
     }
   }
 }
@@ -677,8 +630,8 @@ function sizeDots(){ DD=Math.min(devicePixelRatio||1,1.5); DW=Math.round(innerWi
 function drawDots(){
   const c=dctx; c.clearRect(0,0,DW,DH);
   if (P.dots<=0.001 || P.dotsA<=0.001) return;
-  const g = (mob()? 15 : 21)*DD, r = g*.36, cover=P.dots, band=P.band;
-  c.globalAlpha = P.dotsA; c.lineWidth = Math.max(1.4, 2.1*DD); const rgb = (P.ink && !dark()) ? '13,13,13' : (P.ink ? '242,242,238' : '255,255,255'); c.strokeStyle='rgb('+rgb+')'; c.fillStyle='rgba('+rgb+','+P.fill+')';
+  const g = (mob()? 9 : 11)*DD, r = g*.32, cover=P.dots, band=P.band;
+  c.globalAlpha = P.dotsA; c.lineWidth = Math.max(.9, 1.15*DD); const rgb = (P.ink && !dark()) ? '13,13,13' : (P.ink ? '242,242,238' : '255,255,255'); c.strokeStyle='rgb('+rgb+')'; c.fillStyle='rgba('+rgb+','+P.fill+')';
   c.beginPath();
   const m = mob(); for (let y=g/2; y<DH; y+=g){ const v=y/DH; const w = band ? Math.max(Math.max(0,1-v/(m?.22:.30)), m ? -1 : Math.max(0,(v-.70)/.30)) : 0;
     for (let x=g/2; x<DW; x+=g){
@@ -755,7 +708,7 @@ const SND = (function(){
 const thmBtn = $('#thm');
 function thmUI(){ const d=dark(); thmBtn.setAttribute('aria-pressed', d); thmBtn.setAttribute('aria-label', d?'Switch to light theme':'Switch to dark theme'); $('#thmt').textContent = d?'Light':'Dark'; document.querySelector('meta[name=theme-color]').content = d?'#0B0B0C':'#F2F2EE'; }
 thmBtn.addEventListener('click', ()=>{ if (dark()) delete root.dataset.theme; else root.dataset.theme='dark'; try{ localStorage.setItem('jv2-theme', dark()?'dark':'light'); }catch(e){}
-  PAL = dark() ? PAL_D : PAL_L; thmUI(); drawPX(); drawDots(); if (typeof drawAscii==='function') drawAscii(performance.now()); if (typeof hud==='function' && window.__tl) hud(window.__tl.time(), 15); });
+  thmUI(); drawPX(); drawDots(); if (typeof hud==='function' && window.__tl) hud(window.__tl.time(), 15); });
 thmUI();
 const sndBtn = $('#snd');
 function sndUI(){ const v=SND.on; sndBtn.setAttribute('aria-pressed', v); sndBtn.setAttribute('aria-label', v?'Turn sound off':'Turn sound on'); $('#sndt').textContent = v?'Sound on':'Sound off'; }
@@ -775,7 +728,7 @@ function hud(t,L){
     CUES.forEach(([c,n])=>{ if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue[n](); });
     for (let i=0;i<5;i++){ const c=10.85+i*.42+.05; if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue.tick(); }
     SND.push(Math.min(1, Math.abs(t-lastT)*6)); }
-  lastT = t; aRun = t < 1.25;
+  lastT = t;
   const lightScene = SC[k][2] === '#111'; const fg = (dark() && lightScene) ? '#F2F2EE' : SC[k][2], bgc = (dark() && lightScene) ? '#111' : SC[k][3];
   root.style.setProperty('--hud', fg); root.style.setProperty('--hudbg', bgc); lastK = k;
   chapA.forEach((a,i)=>a.classList.toggle('on', i===k));
@@ -784,7 +737,7 @@ function hud(t,L){
   bar.style.transform='scaleX('+(t/L)+')';
 }
 
-if (root.classList.contains('static')){ sizePX(); sizeAscii(); P.asm=1; drawAscii(4000); addEventListener('resize', ()=>{ sizePX(); sizeAscii(); drawAscii(4000); }); return; }
+if (root.classList.contains('static')){ sizePX(); addEventListener('resize', sizePX); return; }
 
 /* =========================================================================
    THE FILM. One timeline, one unit = one screen of scroll. The camera never cuts.
@@ -948,8 +901,8 @@ const st = ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom 
 function toTime(t){ const y = st.start + (st.end - st.start) * (t / L); window.lenis ? lenis.scrollTo(y, {duration:1.6}) : scrollTo({top:y, behavior:'smooth'}); }
 document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); toTime(+a.dataset.go); }));
 
-addEventListener('resize', ()=>{ sizePX(); sizeDots(); sizeAscii(); });
-sizeDots(); sizePX(); sizeAscii(); hud(0, L); aRaf=requestAnimationFrame(asciiLoop);
+addEventListener('resize', ()=>{ sizePX(); sizeDots(); });
+sizeDots(); sizePX(); hud(0, L);
 ScrollTrigger.addEventListener('refresh', ()=>{ sizePX(); sizeDots(); });
 
 /* smooth wheel scrolling for mouse and trackpad only */
