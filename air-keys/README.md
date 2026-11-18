@@ -1,4 +1,4 @@
-# Air Keys — play piano with your hands
+# fun&play — play piano with your hands
 
 A single-file web app: your webcam tracks your hands and you play an on-screen piano or synth by pinching.
 
