@@ -45,6 +45,13 @@ button{font:inherit; color:inherit}
 @keyframes nudge{50%{transform:translateY(3px)}}
 .hud .rec{display:inline-block; width:7px; height:7px; border-radius:50%; background:#E5322D; margin-right:6px; animation:blink 1.2s steps(2) infinite}
 @keyframes blink{50%{opacity:.15}}
+.hud .snd{bottom:12px; left:50%; translate:-50% 0; display:flex; align-items:center; gap:9px; background:transparent; border:1px solid currentColor; border-radius:999px; padding:7px 13px 7px 11px; font:inherit; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; color:inherit}
+.hud .snd:hover{background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
+.hud .snd .eq{display:inline-flex; align-items:flex-end; gap:2px; height:11px}
+.hud .snd .eq i{display:block; width:2px; height:3px; background:currentColor; border-radius:1px}
+.hud .snd[aria-pressed="true"] .eq i{animation:eq .9s ease-in-out infinite}
+.hud .snd .eq i:nth-child(2){animation-delay:-.3s} .hud .snd .eq i:nth-child(3){animation-delay:-.6s} .hud .snd .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%,100%{height:3px} 50%{height:11px}}
 .hud .bar{bottom:0; left:0; height:2px; width:100%; background:currentColor; transform-origin:0 50%; transform:scaleX(0); opacity:.6}
 .frame-corners{position:fixed; inset:12px; z-index:49; pointer-events:none; color:var(--hud,#111); transition:color .5s}
 .frame-corners i{position:absolute; width:14px; height:14px; border:1.5px solid currentColor; opacity:.5}
@@ -286,6 +293,7 @@ html.static .ly.l1x{transform:translateZ(0)} html.static .ly.l2x{transform:trans
   </ol>
   <a class="v1" href="mailto:jasnoorsaini50@gmail.com" aria-label="Email Jasnoor"><span>jasnoorsaini50@gmail.com</span> ↗</a>
   <div class="hint" id="hint"><span class="rec" aria-hidden="true"></span>Scroll to roll the film <em>↓</em></div>
+  <button class="snd" id="snd" type="button" aria-pressed="false" aria-label="Turn sound on"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="sndt">Sound off</span></button>
   <div class="tc" id="tc" aria-hidden="true">SC.01 SIGNAL<br>00:00:00:00</div>
   <div class="bar" id="bar"></div>
 </div>
@@ -596,11 +604,64 @@ function drawDots(){
   if (P.fill>0) c.fill(); c.stroke(); c.globalAlpha=1;
 }
 
+/* ---------- SOUND: a generated score. Off by default, on by choice. ---------- */
+const SND = (function(){
+  let ctx=null, master=null, on=false, amb=[], air=null, airF=null, noiseBuf=null, sceneK=-1, vel=0, raf=0;
+  // one chord per world: paper (bright, airy), sage (warm), specimen (glassy), night (deep)
+  const WORLDS = [ {f:[220,329.6,440], lp:2200, n:.012}, {f:[146.8,220,293.7], lp:900, n:.006}, {f:[164.8,246.9,493.9], lp:3200, n:.01}, {f:[55,82.4,110], lp:420, n:.004}, {f:[196,293.7,392], lp:1600, n:.004} ];
+  function noise(){ const len=ctx.sampleRate*2, b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; return b; }
+  function init(){
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value=0; 
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3;
+    master.connect(comp).connect(ctx.destination);
+    noiseBuf = noise();
+    // ambient pad: three slow, detuned voices through one filter
+    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900; lp.Q.value=.6;
+    const padG = ctx.createGain(); padG.gain.value=.08; lp.connect(padG).connect(master);
+    const lfo = ctx.createOscillator(), lfoG = ctx.createGain(); lfo.frequency.value=.07; lfoG.gain.value=240; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
+    for (let k=0;k<3;k++){ const o=ctx.createOscillator(), g=ctx.createGain(); o.type= k===2 ? 'sine' : 'triangle'; o.detune.value=(k-1)*7; g.gain.value=k===2?.5:.38; o.connect(g).connect(lp); o.start(); amb.push(o); }
+    amb.lp = lp;
+    // room hiss
+    const hiss = ctx.createBufferSource(); hiss.buffer=noiseBuf; hiss.loop=true; const hf=ctx.createBiquadFilter(); hf.type='highpass'; hf.frequency.value=3000; const hg=ctx.createGain(); hg.gain.value=.006; hiss.connect(hf).connect(hg).connect(master); hiss.start(); amb.hiss=hg;
+    // camera air: noise whose level and pitch follow scroll speed
+    const a = ctx.createBufferSource(); a.buffer=noiseBuf; a.loop=true; airF=ctx.createBiquadFilter(); airF.type='bandpass'; airF.frequency.value=500; airF.Q.value=.9; air=ctx.createGain(); air.gain.value=0; a.connect(airF).connect(air).connect(master); a.start();
+    const loop=()=>{ vel*=.9; const v=Math.min(1, vel); air.gain.setTargetAtTime(v*.11, ctx.currentTime, .08); airF.frequency.setTargetAtTime(420+v*1800, ctx.currentTime, .1); raf=requestAnimationFrame(loop); }; loop();
+  }
+  function world(k){ if(!ctx || k===sceneK) return; sceneK=k; const W=WORLDS[k], t=ctx.currentTime;
+    amb.forEach((o,i)=>o.frequency.setTargetAtTime(W.f[i], t, .9)); amb.lp.frequency.setTargetAtTime(W.lp, t, 1.2); amb.hiss.gain.setTargetAtTime(W.n, t, 1); }
+  function env(node, peak, a, d){ const t=ctx.currentTime; node.gain.cancelScheduledValues(t); node.gain.setValueAtTime(0,t); node.gain.linearRampToValueAtTime(peak,t+a); node.gain.exponentialRampToValueAtTime(.0001,t+a+d); }
+  function tone(f, type, peak, a, d, glideTo){ if(!on) return; const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.value=f; if(glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime+a+d); o.connect(g).connect(master); env(g,peak,a,d); o.start(); o.stop(ctx.currentTime+a+d+.05); }
+  function sweep(f0,f1,peak,dur,q){ if(!on) return; const n=ctx.createBufferSource(); n.buffer=noiseBuf; const f=ctx.createBiquadFilter(); f.type='bandpass'; f.Q.value=q||1.4; f.frequency.setValueAtTime(f0,ctx.currentTime); f.frequency.exponentialRampToValueAtTime(f1,ctx.currentTime+dur); const g=ctx.createGain(); n.connect(f).connect(g).connect(master); env(g,peak,dur*.35,dur*.65); n.start(); n.stop(ctx.currentTime+dur+.1); }
+  const cue = {
+    lens(){ sweep(300,3200,.32,1.1,.8); tone(880,'sine',.06,.02,.5); tone(1318.5,'sine',.04,.05,.7); },
+    slash(){ sweep(5200,260,.42,.55,2.2); tone(196,'sawtooth',.05,.005,.35,98); },
+    iris(){ tone(110,'sine',.32,.02,1.8,41); sweep(900,120,.22,1.2,.7); },
+    tick(){ tone(1760,'square',.025,.002,.06); tone(2637,'sine',.02,.002,.09); },
+    end(){ [523.25,659.3,784,1046.5].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.07,.01,1.4),i*90)); },
+    blip(){ tone(1200+Math.random()*900,'square',.012,.001,.03); },
+    hover(){ tone(2400,'sine',.012,.002,.05); }
+  };
+  function set(v){ on=v; if(v){ if(!ctx) init(); ctx.resume(); master.gain.setTargetAtTime(.55, ctx.currentTime, .4); sceneK=-1; } else if(ctx){ master.gain.setTargetAtTime(0, ctx.currentTime, .15); setTimeout(()=>{ if(!on) ctx.suspend(); }, 600); } }
+  document.addEventListener('visibilitychange', ()=>{ if(!ctx) return; if(document.hidden) ctx.suspend(); else if(on) ctx.resume(); });
+  return { set, world, cue, get on(){ return on; }, push(v){ vel=Math.max(vel, v); } };
+})();
+const sndBtn = $('#snd');
+sndBtn.addEventListener('click', ()=>{ const v=!SND.on; SND.set(v); sndBtn.setAttribute('aria-pressed', v); sndBtn.setAttribute('aria-label', v?'Turn sound off':'Turn sound on'); $('#sndt').textContent = v?'Sound on':'Sound off'; if(v){ SND.cue.lens(); } try{ localStorage.setItem('jv2-sound', v?'1':'0'); }catch(e){} });
+document.addEventListener('pointerover', e=>{ if(!SND.on) return; const a=e.target.closest && e.target.closest('a, button, .node'); if(a && !a.contains(e.relatedTarget)) SND.cue.hover(); });
+
 /* ---------- HUD helpers ---------- */
 const chapA=[...document.querySelectorAll('.chap a')], tc=$('#tc'), bar=$('#bar');
 const SC=[[0,'SC.01 Signal','#111','#F2F2EE'],[1.2,'SC.02 System','#fff','#111'],[4.6,'SC.03 Specimen','#111','#F2F2EE'],[9.9,'SC.04 Night','#fff','#111'],[14.3,'End card','#111','#F2F2EE']];
+let lastT = 0;
+const CUES = [[1.0,'lens'],[4.3,'slash'],[9.65,'iris'],[14.25,'end']];
 function hud(t,L){
   let k=0; SC.forEach((s,i)=>{ if (t>=s[0]) k=i; });
+  if (SND.on){ SND.world(k);
+    CUES.forEach(([c,n])=>{ if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue[n](); });
+    for (let i=0;i<5;i++){ const c=10.85+i*.42+.05; if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue.tick(); }
+    SND.push(Math.min(1, Math.abs(t-lastT)*6)); }
+  lastT = t;
   root.style.setProperty('--hud', SC[k][2]); root.style.setProperty('--hudbg', SC[k][3]);
   chapA.forEach((a,i)=>a.classList.toggle('on', i===k));
   const sec = t/L*140, f = Math.floor((sec%1)*24), p2=n=>String(Math.floor(n)).padStart(2,'0');
