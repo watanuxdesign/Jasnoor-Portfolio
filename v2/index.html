@@ -322,9 +322,15 @@ html[data-theme="dark"] .end .cred{color:#8a8a86}
   .cap h3{font-size:30px}
   .xp{left:4vw; right:4vw; width:auto; top:auto; bottom:4svh; translate:none; font-size:13px}
   .xp li i{display:none}
-  .end{justify-content:flex-start; padding-top:26svh}
-  .end .px{display:block; right:5vw; top:9svh; width:36vw; rotate:4deg}
-  .end .row{gap:8px} .end .btn{padding:12px 14px}
+  /* end card, phone: one centred, left-aligned column, a calm resolve */
+  .end{justify-content:center; padding:11svh 6vw calc(15svh + env(safe-area-inset-bottom))}
+  .end .px{display:block; position:relative; right:auto; top:auto; width:34vw; max-width:150px; rotate:-4deg; margin:0 0 4.5svh 2px; filter:drop-shadow(0 14px 20px rgba(0,0,0,.14))}
+  .end h2{font-size:11.2vw; margin:.3em 0 .55em; max-width:none}
+  .end h2 span{white-space:nowrap}
+  .end .row{display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:stretch}
+  .end .mail{grid-column:1/-1; font-size:21px; margin:0 0 6px; padding-bottom:4px; justify-self:start}
+  .end .btn{min-height:48px; display:flex; align-items:center; justify-content:center; padding:12px; font-size:12px}
+  .end .cred{bottom:calc(66px + env(safe-area-inset-bottom)); left:6vw; right:6vw; gap:3px}
   .end .cred{flex-direction:column; gap:4px}
   .lb{padding:60px 12px}
 }
