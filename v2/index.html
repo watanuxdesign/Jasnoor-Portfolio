@@ -37,7 +37,11 @@ button{font:inherit; color:inherit}
 .hud .chap a{display:block; padding:6px 9px; text-decoration:none; opacity:.45; border-radius:2px; transition:opacity .3s, background .3s}
 .hud .chap a.on{opacity:1; background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
 .hud .chap a:hover{opacity:1}
-.hud .v1{top:18px; right:20px; text-decoration:none}
+.hud .tr{top:13px; right:20px; display:flex; align-items:center; gap:14px}
+.hud .v1{text-decoration:none}
+.hud .thm{display:flex; align-items:center; gap:7px; background:transparent; border:1px solid currentColor; border-radius:999px; padding:5px 11px 5px 8px; font:inherit; color:inherit; letter-spacing:.06em; text-transform:uppercase; cursor:pointer}
+.hud .thm:hover{background:var(--hud,#111); color:var(--hudbg,#F2F2EE)}
+.hud .thm i{width:11px; height:11px; border-radius:50%; border:1.5px solid currentColor; background:linear-gradient(90deg, currentColor 50%, transparent 50%)}
 .hud .v1 span{border-bottom:1px solid currentColor}
 .hud .tc{bottom:16px; right:20px; text-align:right; line-height:1.6}
 .hud .hint{bottom:16px; left:20px; line-height:1.6}
@@ -219,11 +223,41 @@ button{font:inherit; color:inherit}
 .lb figcaption{color:#fff; font-family:var(--mono); font-size:12px; text-transform:uppercase; text-align:center}
 .lb .x{position:absolute; top:18px; right:18px; width:44px; height:44px; border:1.5px solid #fff; background:transparent; color:#fff; font-size:20px; cursor:pointer}
 
+/* ---------- dark theme ---------- */
+html[data-theme="dark"]{--paper:#0B0B0C}
+html[data-theme="dark"] body{background:#0B0B0C; color:#EDEDE8}
+html[data-theme="dark"] #s1{background:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px) 0 0/14px 14px, linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) 0 0/14px 14px, radial-gradient(120% 90% at 50% 40%, #1A1A1C 0%, #0E0E10 60%, #070708 100%)}
+html[data-theme="dark"] .name{color:#F2F2EE}
+html[data-theme="dark"] .role{color:#EDEDE8} html[data-theme="dark"] .role small, html[data-theme="dark"] .lbl ol li::before{color:#8a8a86}
+html[data-theme="dark"] .slate{color:#9a9a96}
+html[data-theme="dark"] #s2{background:linear-gradient(180deg,#1C221C 0%,#131813 100%)}
+html[data-theme="dark"] .poster{background:#1E211E}
+html[data-theme="dark"] .poster figcaption{color:#9da59a}
+html[data-theme="dark"] .case{background:rgba(18,22,18,.9); color:#EDEDE8; box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+html[data-theme="dark"] .case p{color:#c9cdc6} html[data-theme="dark"] .case .k{color:#9aa097}
+html[data-theme="dark"] .go{background:#F2F2EE; color:#0D0D0D} html[data-theme="dark"] .go:hover{background:#fff}
+html[data-theme="dark"] .pills li{background:#000}
+html[data-theme="dark"] #s3{background:#0C0D0C}
+html[data-theme="dark"] .xr{filter:grayscale(1) invert(1) contrast(1.25) brightness(.92)}
+html[data-theme="dark"] .s3-h, html[data-theme="dark"] .s3-top{color:#F2F2EE}
+html[data-theme="dark"] .note{color:#d6d6d1} html[data-theme="dark"] .note .k{color:#8a8a86}
+html[data-theme="dark"] .note .pills li{color:#EDEDE8; border-color:#EDEDE8; background:transparent}
+html[data-theme="dark"] .ly .card{border-color:#3a3a3a; box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+html[data-theme="dark"] .ly .tag{background:#EDEDE8; color:#0D0D0D} html[data-theme="dark"] .ly .tag::before{background:#EDEDE8}
+html[data-theme="dark"] .sup-wrap .base{border-color:#3a3a3a}
+html[data-theme="dark"] .end{color:#F2F2EE}
+html[data-theme="dark"] .end h2 mark{color:#0D0D0D}
+html[data-theme="dark"] .end .mail{border-color:#F2F2EE}
+html[data-theme="dark"] .end .btn{border-color:#F2F2EE; color:#F2F2EE}
+html[data-theme="dark"] .end .btn.solid{background:#F2F2EE; color:#0D0D0D}
+html[data-theme="dark"] .end .cred{color:#8a8a86}
+
 /* ---------- mobile composition ---------- */
 @media (max-width:760px){
   .hud .chap{display:none}
   .hud .brand i{display:none}
   .hud .brand .sub{display:none}
+  .hud .tr{gap:8px; right:12px} .hud .thm span{display:none} .hud .thm{padding:6px}
   .hud .tc{display:none} .hud .snd{left:auto; right:14px; translate:none; padding:6px 10px}
   .hud .v1{font-size:10px}
   .name{flex-direction:column; justify-content:space-between; align-items:flex-start; top:9svh; bottom:auto; height:72svh; translate:none; font-size:23vw; padding:0 4vw}
@@ -282,6 +316,7 @@ html.static .ly.l1x{transform:translateZ(0)} html.static .ly.l2x{transform:trans
 </style>
 </head>
 <body>
+<script>try{ if(localStorage.getItem('jv2-theme')==='dark') document.documentElement.dataset.theme='dark'; }catch(e){}</script>
 <a class="sr" href="#contact">Skip to contact</a>
 
 <div class="hud" id="hud" aria-label="Viewfinder">
@@ -293,9 +328,9 @@ html.static .ly.l1x{transform:translateZ(0)} html.static .ly.l2x{transform:trans
     <li><a href="#s4" data-go="10.3">04 Night</a></li>
     <li><a href="#contact" data-go="15">Contact</a></li>
   </ol>
-  <a class="v1" href="mailto:jasnoorsaini50@gmail.com" aria-label="Email Jasnoor"><span>jasnoorsaini50@gmail.com</span> ↗</a>
+  <div class="tr"><button class="thm" id="thm" type="button" aria-pressed="false" aria-label="Switch to dark theme"><i aria-hidden="true"></i><span id="thmt">Dark</span></button><a class="v1" href="mailto:jasnoorsaini50@gmail.com" aria-label="Email Jasnoor"><span>jasnoorsaini50@gmail.com</span> ↗</a></div>
   <div class="hint" id="hint"><span class="rec" aria-hidden="true"></span>Scroll to roll the film <em>↓</em></div>
-  <button class="snd" id="snd" type="button" aria-pressed="false" aria-label="Turn sound on"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="sndt">Sound off</span></button>
+  <button class="snd" id="snd" type="button" aria-pressed="true" aria-label="Turn sound off"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="sndt">Sound on</span></button>
   <div class="tc" id="tc" aria-hidden="true">SC.01 SIGNAL<br>00:00:00:00</div>
   <div class="bar" id="bar"></div>
 </div>
@@ -565,13 +600,16 @@ function paintArt(){
 }
 /* ---------- ASCII pixel field: tinted grid cells carrying characters ---------- */
 const RAMP = ' .:;tS%#@8';
-const PAL = { o:[[255,232,216],[255,107,26],[150,52,0]], k:[[226,226,220],[60,60,58],[13,13,13]], s:[[220,229,214],[126,160,104],[46,74,38]] };
+const PAL_L = { o:[[255,232,216],[255,107,26],[150,52,0]], k:[[226,226,220],[60,60,58],[13,13,13]], s:[[220,229,214],[126,160,104],[46,74,38]] };
+const PAL_D = { o:[[58,28,14],[255,107,26],[255,214,190]], k:[[34,34,34],[150,150,146],[240,240,236]], s:[[26,38,24],[126,170,100],[214,236,200]] };
+const dark = () => root.dataset.theme === 'dark';
+let PAL = dark() ? PAL_D : PAL_L;
 const mix=(a,b,t)=>'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')';
 function glyphCell(c, x, y, size, v, pal, fontPx){ // v 0..1
   const P0=PAL[pal]; const t=Math.min(1,v);
   c.fillStyle = mix(P0[0], P0[1], t*.85); c.fillRect(x+.5, y+.5, size-1, size-1);
   const ch = RAMP[Math.min(RAMP.length-1, Math.max(1, Math.round(t*(RAMP.length-1))))];
-  c.fillStyle = t>.55 ? (pal==='k' ? '#F2F2EE' : mix(P0[2],[255,255,255],.1)) : mix(P0[1], P0[2], .6);
+  c.fillStyle = dark() ? (t>.55 ? '#0B0B0C' : mix(P0[1], P0[2], .55)) : (t>.55 ? (pal==='k' ? '#F2F2EE' : mix(P0[2],[255,255,255],.1)) : mix(P0[1], P0[2], .6));
   c.fillText(ch, x+size/2, y+size/2+fontPx*.36);
 }
 const asc = $('#ascii'), sctx = asc.getContext('2d');
@@ -640,7 +678,7 @@ function drawDots(){
   const c=dctx; c.clearRect(0,0,DW,DH);
   if (P.dots<=0.001 || P.dotsA<=0.001) return;
   const g = (mob()? 15 : 21)*DD, r = g*.36, cover=P.dots, band=P.band;
-  c.globalAlpha = P.dotsA; c.lineWidth = Math.max(1.4, 2.1*DD); const rgb = P.ink ? '13,13,13' : '255,255,255'; c.strokeStyle='rgb('+rgb+')'; c.fillStyle='rgba('+rgb+','+P.fill+')';
+  c.globalAlpha = P.dotsA; c.lineWidth = Math.max(1.4, 2.1*DD); const rgb = (P.ink && !dark()) ? '13,13,13' : (P.ink ? '242,242,238' : '255,255,255'); c.strokeStyle='rgb('+rgb+')'; c.fillStyle='rgba('+rgb+','+P.fill+')';
   c.beginPath();
   const m = mob(); for (let y=g/2; y<DH; y+=g){ const v=y/DH; const w = band ? Math.max(Math.max(0,1-v/(m?.22:.30)), m ? -1 : Math.max(0,(v-.70)/.30)) : 0;
     for (let x=g/2; x<DW; x+=g){
@@ -651,65 +689,95 @@ function drawDots(){
   if (P.fill>0) c.fill(); c.stroke(); c.globalAlpha=1;
 }
 
-/* ---------- SOUND: a generated score. Off by default, on by choice. ---------- */
+/* ---------- SOUND: a warm, generated score. On by default (starts at the first tap, click or key), easy to switch off. ---------- */
 const SND = (function(){
-  let ctx=null, master=null, on=false, amb=[], air=null, airF=null, noiseBuf=null, sceneK=-1, vel=0, raf=0;
-  // one chord per world: paper (bright, airy), sage (warm), specimen (glassy), night (deep)
-  const WORLDS = [ {f:[220,329.6,440], lp:2200, n:.012}, {f:[146.8,220,293.7], lp:900, n:.006}, {f:[164.8,246.9,493.9], lp:3200, n:.01}, {f:[55,82.4,110], lp:420, n:.004}, {f:[196,293.7,392], lp:1600, n:.004} ];
-  function noise(){ const len=ctx.sampleRate*2, b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; return b; }
-  function init(){
+  let ctx=null, master=null, wet=null, dry=null, on=true, started=false, voices=[], padG=null, padF=null, airG=null, airF=null, nb=null, sceneK=-1, vel=0, chimeT=0;
+  // hopeful, open chords per world
+  const CH = [ [130.8,196,246.9,293.7,329.6], [174.6,220,261.6,329.6,392], [110,164.8,196,246.9,261.6], [73.4,146.8,220,293.7,329.6], [98,146.8,246.9,370,440] ];
+  const PENTA = [523.3,587.3,659.3,784,880,1046.5,1174.7,1318.5];
+  try { if (localStorage.getItem('jv2-sound')==='0') on=false; } catch(e){}
+  function impulse(sec){ const n=ctx.sampleRate*sec, b=ctx.createBuffer(2,n,ctx.sampleRate); for(let c=0;c<2;c++){ const d=b.getChannelData(c); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.2); } return b; }
+  function start(){
+    if (started) return; started=true;
     ctx = new (window.AudioContext||window.webkitAudioContext)();
-    master = ctx.createGain(); master.gain.value=0; 
-    const comp = ctx.createDynamicsCompressor(); comp.threshold.value=-18; comp.ratio.value=3;
-    master.connect(comp).connect(ctx.destination);
-    noiseBuf = noise();
-    // ambient pad: three slow, detuned voices through one filter
-    const lp = ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=900; lp.Q.value=.6;
-    const padG = ctx.createGain(); padG.gain.value=.08; lp.connect(padG).connect(master);
-    const lfo = ctx.createOscillator(), lfoG = ctx.createGain(); lfo.frequency.value=.07; lfoG.gain.value=240; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
-    for (let k=0;k<3;k++){ const o=ctx.createOscillator(), g=ctx.createGain(); o.type= k===2 ? 'sine' : 'triangle'; o.detune.value=(k-1)*7; g.gain.value=k===2?.5:.38; o.connect(g).connect(lp); o.start(); amb.push(o); }
-    amb.lp = lp;
-    // room hiss
-    const hiss = ctx.createBufferSource(); hiss.buffer=noiseBuf; hiss.loop=true; const hf=ctx.createBiquadFilter(); hf.type='highpass'; hf.frequency.value=3000; const hg=ctx.createGain(); hg.gain.value=.006; hiss.connect(hf).connect(hg).connect(master); hiss.start(); amb.hiss=hg;
-    // camera air: noise whose level and pitch follow scroll speed
-    const a = ctx.createBufferSource(); a.buffer=noiseBuf; a.loop=true; airF=ctx.createBiquadFilter(); airF.type='bandpass'; airF.frequency.value=500; airF.Q.value=.9; air=ctx.createGain(); air.gain.value=0; a.connect(airF).connect(air).connect(master); a.start();
-    const loop=()=>{ vel*=.9; const v=Math.min(1, vel); air.gain.setTargetAtTime(v*.11, ctx.currentTime, .08); airF.frequency.setTargetAtTime(420+v*1800, ctx.currentTime, .1); raf=requestAnimationFrame(loop); }; loop();
+    master=ctx.createGain(); master.gain.value=0;
+    const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-20; comp.ratio.value=2.5; master.connect(comp).connect(ctx.destination);
+    const rev=ctx.createConvolver(); rev.buffer=impulse(3.4); wet=ctx.createGain(); wet.gain.value=.55; dry=ctx.createGain(); dry.gain.value=.75;
+    wet.connect(rev).connect(master); dry.connect(master);
+    const len=ctx.sampleRate*2; nb=ctx.createBuffer(1,len,ctx.sampleRate); const d=nb.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+    // pad: soft sines with a faint octave shimmer, breathing slowly in and out
+    padF=ctx.createBiquadFilter(); padF.type='lowpass'; padF.frequency.value=1400; padF.Q.value=.3;
+    padG=ctx.createGain(); padG.gain.value=.05; padF.connect(padG); padG.connect(dry); padG.connect(wet);
+    const br=ctx.createOscillator(), brG=ctx.createGain(); br.frequency.value=.07; brG.gain.value=.022; br.connect(brG).connect(padG.gain); br.start();
+    CH[0].forEach((f,k)=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=f; o.detune.value=(k%2?4:-4); g.gain.value=k===0?.5:.32;
+      const sh=ctx.createOscillator(), sg=ctx.createGain(); sh.type='triangle'; sh.frequency.value=f*2; sg.gain.value=.05; sh.connect(sg).connect(padF);
+      o.connect(g).connect(padF); o.start(); sh.start(); voices.push([o,sh]); });
+    // the camera's air: very soft, low and round
+    const a=ctx.createBufferSource(); a.buffer=nb; a.loop=true; airF=ctx.createBiquadFilter(); airF.type='lowpass'; airF.frequency.value=500; airG=ctx.createGain(); airG.gain.value=0; a.connect(airF).connect(airG).connect(wet); a.start();
+    (function loop(){ requestAnimationFrame(loop); if(!ctx) return; vel*=.9; const v=Math.min(1,vel), t=ctx.currentTime;
+      airG.gain.setTargetAtTime(v*.03, t, .12); airF.frequency.setTargetAtTime(380+v*900, t, .15);
+      if (on && t>chimeT){ chimeT=t+3+Math.random()*4; chime(PENTA[Math.floor(Math.random()*PENTA.length)], .012); } })();
+    sceneK=-1; world(0); apply();
   }
-  function world(k){ if(!ctx || k===sceneK) return; sceneK=k; const W=WORLDS[k], t=ctx.currentTime;
-    amb.forEach((o,i)=>o.frequency.setTargetAtTime(W.f[i], t, .9)); amb.lp.frequency.setTargetAtTime(W.lp, t, 1.2); amb.hiss.gain.setTargetAtTime(W.n, t, 1); }
-  function env(node, peak, a, d){ const t=ctx.currentTime; node.gain.cancelScheduledValues(t); node.gain.setValueAtTime(0,t); node.gain.linearRampToValueAtTime(peak,t+a); node.gain.exponentialRampToValueAtTime(.0001,t+a+d); }
-  function tone(f, type, peak, a, d, glideTo){ if(!on) return; const o=ctx.createOscillator(), g=ctx.createGain(); o.type=type; o.frequency.value=f; if(glideTo) o.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime+a+d); o.connect(g).connect(master); env(g,peak,a,d); o.start(); o.stop(ctx.currentTime+a+d+.05); }
-  function sweep(f0,f1,peak,dur,q){ if(!on) return; const n=ctx.createBufferSource(); n.buffer=noiseBuf; const f=ctx.createBiquadFilter(); f.type='bandpass'; f.Q.value=q||1.4; f.frequency.setValueAtTime(f0,ctx.currentTime); f.frequency.exponentialRampToValueAtTime(f1,ctx.currentTime+dur); const g=ctx.createGain(); n.connect(f).connect(g).connect(master); env(g,peak,dur*.35,dur*.65); n.start(); n.stop(ctx.currentTime+dur+.1); }
+  function apply(){ if(!ctx) return; const t=ctx.currentTime; if(on){ ctx.resume(); master.gain.cancelScheduledValues(t); master.gain.setTargetAtTime(.34, t, .8); } else { master.gain.setTargetAtTime(0, t, .12); } }
+  function world(k){ if(!ctx || k===sceneK) return; sceneK=k; const t=ctx.currentTime;
+    voices.forEach(([o,sh],i)=>{ o.frequency.setTargetAtTime(CH[k][i], t, 1.4); sh.frequency.setTargetAtTime(CH[k][i]*2, t, 1.4); });
+    padF.frequency.setTargetAtTime([1500,1200,1900,900,1700][k], t, 1.6); }
+  // a glassy pluck: sine + a soft inharmonic partial, mostly into the reverb
+  function chime(f, peak, decay){ if(!ctx||!on) return; const t=ctx.currentTime, d=decay||1.6;
+    [[1,1],[2.76,.18],[4.1,.05]].forEach(([m,l])=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=f*m;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(peak*l,t+.006); g.gain.exponentialRampToValueAtTime(.0001,t+d/m);
+      o.connect(g); g.connect(wet); g.connect(dry); o.start(t); o.stop(t+d+.1); }); }
+  function swell(freqs, peak, dur){ if(!ctx||!on) return; const t=ctx.currentTime;
+    freqs.forEach(f=>{ const o=ctx.createOscillator(), g=ctx.createGain(); o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(peak,t+dur*.45); g.gain.linearRampToValueAtTime(0,t+dur);
+      o.connect(g).connect(wet); o.start(t); o.stop(t+dur+.1); }); }
+  function breeze(peak, dur){ if(!ctx||!on) return; const t=ctx.currentTime, n=ctx.createBufferSource(); n.buffer=nb; const f=ctx.createBiquadFilter(); f.type='lowpass';
+    f.frequency.setValueAtTime(600,t); f.frequency.linearRampToValueAtTime(2600,t+dur*.5); f.frequency.linearRampToValueAtTime(700,t+dur);
+    const g=ctx.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(peak,t+dur*.45); g.gain.linearRampToValueAtTime(0,t+dur); n.connect(f).connect(g).connect(wet); n.start(t); n.stop(t+dur+.1); }
+  const arp=(notes,gap,peak)=>notes.forEach((f,i)=>setTimeout(()=>chime(f,peak,2.2),i*gap));
   const cue = {
-    lens(){ sweep(300,3200,.32,1.1,.8); tone(880,'sine',.06,.02,.5); tone(1318.5,'sine',.04,.05,.7); },
-    slash(){ sweep(5200,260,.42,.55,2.2); tone(196,'sawtooth',.05,.005,.35,98); },
-    iris(){ tone(110,'sine',.32,.02,1.8,41); sweep(900,120,.22,1.2,.7); },
-    tick(){ tone(1760,'square',.025,.002,.06); tone(2637,'sine',.02,.002,.09); },
-    end(){ [523.25,659.3,784,1046.5].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.07,.01,1.4),i*90)); },
-    blip(){ tone(1200+Math.random()*900,'square',.012,.001,.03); },
-    hover(){ tone(2400,'sine',.012,.002,.05); }
+    lens(){ arp([523.3,659.3,784,987.8,1318.5],85,.045); },
+    slash(){ breeze(.05,.9); arp([880,1174.7],120,.04); },
+    iris(){ swell([146.8,220,293.7,440],.022,2.6); arp([587.3,880],160,.035); },
+    tick(){ chime(1318.5,.03,.9); },
+    end(){ arp([392,493.9,587.3,740,987.8],110,.05); swell([196,293.7,370],.02,2.4); },
+    hover(el){ let h=0; const s=(el.textContent||'x'); for (let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; chime(PENTA[h%PENTA.length], .028, .8); },
+    click(){ chime(784,.04,1.2); setTimeout(()=>chime(1174.7,.035,1.4),70); }
   };
-  function set(v){ on=v; if(v){ if(!ctx) init(); ctx.resume(); master.gain.setTargetAtTime(.55, ctx.currentTime, .4); sceneK=-1; } else if(ctx){ master.gain.setTargetAtTime(0, ctx.currentTime, .15); setTimeout(()=>{ if(!on) ctx.suspend(); }, 600); } }
+  // browsers allow sound only after a first gesture: start the score on the first tap, click or key
+  const go = e => { if (e && e.target && e.target.closest && e.target.closest('#snd')) return; if (on) start(); off(); };
+  const off = () => ['pointerdown','keydown','touchend'].forEach(ev=>removeEventListener(ev, go, true));
+  ['pointerdown','keydown','touchend'].forEach(ev=>addEventListener(ev, go, true));
   document.addEventListener('visibilitychange', ()=>{ if(!ctx) return; if(document.hidden) ctx.suspend(); else if(on) ctx.resume(); });
-  return { set, world, cue, get on(){ return on; }, push(v){ vel=Math.max(vel, v); } };
+  return { set(v){ on=v; if(v){ start(); } apply(); try{ localStorage.setItem('jv2-sound', v?'1':'0'); }catch(e){} }, world, cue, get on(){ return on; }, get live(){ return started && on; }, push(v){ vel=Math.max(vel,v); } };
 })();
+const thmBtn = $('#thm');
+function thmUI(){ const d=dark(); thmBtn.setAttribute('aria-pressed', d); thmBtn.setAttribute('aria-label', d?'Switch to light theme':'Switch to dark theme'); $('#thmt').textContent = d?'Light':'Dark'; document.querySelector('meta[name=theme-color]').content = d?'#0B0B0C':'#F2F2EE'; }
+thmBtn.addEventListener('click', ()=>{ if (dark()) delete root.dataset.theme; else root.dataset.theme='dark'; try{ localStorage.setItem('jv2-theme', dark()?'dark':'light'); }catch(e){}
+  PAL = dark() ? PAL_D : PAL_L; thmUI(); drawPX(); drawDots(); if (typeof drawAscii==='function') drawAscii(performance.now()); if (typeof hud==='function' && window.__tl) hud(window.__tl.time(), 15); });
+thmUI();
 const sndBtn = $('#snd');
-sndBtn.addEventListener('click', ()=>{ const v=!SND.on; SND.set(v); sndBtn.setAttribute('aria-pressed', v); sndBtn.setAttribute('aria-label', v?'Turn sound off':'Turn sound on'); $('#sndt').textContent = v?'Sound on':'Sound off'; if(v){ SND.cue.lens(); } try{ localStorage.setItem('jv2-sound', v?'1':'0'); }catch(e){} });
-document.addEventListener('pointerover', e=>{ if(!SND.on) return; const a=e.target.closest && e.target.closest('a, button, .node'); if(a && !a.contains(e.relatedTarget)) SND.cue.hover(); });
+function sndUI(){ const v=SND.on; sndBtn.setAttribute('aria-pressed', v); sndBtn.setAttribute('aria-label', v?'Turn sound off':'Turn sound on'); $('#sndt').textContent = v?'Sound on':'Sound off'; }
+sndUI();
+sndBtn.addEventListener('click', ()=>{ SND.set(!SND.on); sndUI(); if (SND.on) setTimeout(()=>SND.cue.lens(), 120); });
+document.addEventListener('pointerover', e=>{ if(!SND.live) return; const a=e.target.closest && e.target.closest('a, button, .node'); if(a && !a.contains(e.relatedTarget)) SND.cue.hover(a); });
+document.addEventListener('click', e=>{ if(!SND.live) return; if (e.target.closest && e.target.closest('a, button, .node') && !e.target.closest('#snd')) SND.cue.click(); });
 
 /* ---------- HUD helpers ---------- */
 const chapA=[...document.querySelectorAll('.chap a')], tc=$('#tc'), bar=$('#bar');
 const SC=[[0,'SC.01 Signal','#111','#F2F2EE'],[1.2,'SC.02 System','#fff','#111'],[4.6,'SC.03 Specimen','#111','#F2F2EE'],[9.9,'SC.04 Night','#fff','#111'],[14.3,'End card','#111','#F2F2EE']];
-let lastT = 0;
+let lastT = 0, lastK = 0, lastL = 15;
 const CUES = [[1.0,'lens'],[4.3,'slash'],[9.65,'iris'],[14.25,'end']];
 function hud(t,L){
   let k=0; SC.forEach((s,i)=>{ if (t>=s[0]) k=i; });
-  if (SND.on){ SND.world(k);
+  if (SND.live){ SND.world(k);
     CUES.forEach(([c,n])=>{ if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue[n](); });
     for (let i=0;i<5;i++){ const c=10.85+i*.42+.05; if ((lastT<c && t>=c) || (lastT>c && t<=c)) SND.cue.tick(); }
     SND.push(Math.min(1, Math.abs(t-lastT)*6)); }
   lastT = t; aRun = t < 1.25;
-  root.style.setProperty('--hud', SC[k][2]); root.style.setProperty('--hudbg', SC[k][3]);
+  const lightScene = SC[k][2] === '#111'; const fg = (dark() && lightScene) ? '#F2F2EE' : SC[k][2], bgc = (dark() && lightScene) ? '#111' : SC[k][3];
+  root.style.setProperty('--hud', fg); root.style.setProperty('--hudbg', bgc); lastK = k;
   chapA.forEach((a,i)=>a.classList.toggle('on', i===k));
   const sec = t/L*140, f = Math.floor((sec%1)*24), p2=n=>String(Math.floor(n)).padStart(2,'0');
   tc.innerHTML = SC[k][1]+'<br>00:'+p2(sec/60)+':'+p2(sec%60)+':'+p2(f);
@@ -872,6 +940,7 @@ tl.to('#ncam', {x:()=>mob()? vw(4) : vw(3), y:()=>mob()? -vh(18) : vh(18), scale
   .fromTo('#contact h2 span', {yPercent:40, autoAlpha:0}, {yPercent:0, autoAlpha:1, duration:.3, stagger:.08, ease:'power3.out'}, 14.5)
   .set({}, {}, L);
 
+window.__tl = tl;
 const st = ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom bottom', scrub: matchMedia('(pointer:fine)').matches ? 1 : .5, animation:tl, invalidateOnRefresh:true,
   onUpdate: self => hud(tl.time(), L) });
 
