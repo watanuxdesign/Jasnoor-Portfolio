@@ -667,6 +667,9 @@ const stems=[...document.querySelectorAll('.stem')];
 stems.forEach(s=>{ const d=+s.dataset.d, dir=+s.dataset.dir; tl.fromTo(s, {x:()=>vw(8)*d, y:()=>dir>0 ? -vh(40)*d : vh(6)}, {x:()=>-vw(22)*d, y:()=>dir>0 ? vh(6) : -vh(40)*d, duration:3.6}, 1.0); });
 tl.fromTo('#stems', {scale:1.25, rotate:-3}, {scale:1, rotate:0, duration:1.2, ease:'power2.out'}, 1.0)
   .to('#vine', {strokeDashoffset:0, duration:1.2, ease:'power1.inOut'}, 1.25)
+  // while a project is on screen, the rollers fall out of focus so the work holds the eye
+  .fromTo('#stems', {filter:'blur(0px)', opacity:1}, {filter:()=>mob()?'blur(6px)':'blur(12px)', opacity:.5, duration:.35, ease:'power2.out'}, 1.6)
+  .fromTo('.vine', {opacity:1}, {opacity:.35, duration:.35}, 1.6)
   .to(['#sw1','#sw2'], {yPercent:0, duration:.45, stagger:.1, ease:'power3.out'}, 1.35)
   .to(P, {drift:3, duration:3.2, onUpdate:drawDots}, 1.4)
   // PG Plus
